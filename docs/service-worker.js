@@ -1,0 +1,248 @@
+/**
+ * Welcome to your Workbox-powered service worker!
+ *
+ * You'll need to register this file in your web app and you should
+ * disable HTTP caching for this file too.
+ * See https://goo.gl/nhQhGp
+ *
+ * The rest of the code is auto-generated. Please don't update this file
+ * directly; instead, make changes to your Workbox build configuration
+ * and re-run your build process.
+ * See https://goo.gl/2aRDsh
+ */
+
+importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.1.0/workbox-sw.js");
+
+/**
+ * The workboxSW.precacheAndRoute() method efficiently caches and responds to
+ * requests for URLs in the manifest.
+ * See https://goo.gl/S9QRab
+ */
+self.__precacheManifest = [
+  {
+    "url": "404.html",
+    "revision": "390faa563a436220ebf8c79bc4255ecb"
+  },
+  {
+    "url": "about/index.html",
+    "revision": "f2418d3b1a061e37b6b9509ff3c6ebc3"
+  },
+  {
+    "url": "assets/css/9.styles.53136fc8.css",
+    "revision": "1173fc686531ccca82f5155894043bac"
+  },
+  {
+    "url": "assets/fonts/fa-brands-400.9404b3cb.woff2",
+    "revision": "9404b3cb62fa977e95ceb5b53044f192"
+  },
+  {
+    "url": "assets/fonts/fa-brands-400.c601db56.ttf",
+    "revision": "c601db56ffa80d05739b42d9c9788c31"
+  },
+  {
+    "url": "assets/fonts/fa-brands-400.cc6aff50.woff",
+    "revision": "cc6aff5040868e4b27fdcfdaa4647746"
+  },
+  {
+    "url": "assets/fonts/fa-brands-400.e2a7835b.eot",
+    "revision": "e2a7835b2b25aab252c3506cfdfd6507"
+  },
+  {
+    "url": "assets/fonts/fa-regular-400.0b697cf4.ttf",
+    "revision": "0b697cf43612b2764c55b3ed9eae0934"
+  },
+  {
+    "url": "assets/fonts/fa-regular-400.28ec6d38.woff2",
+    "revision": "28ec6d38ccb96288be39293dae9ba767"
+  },
+  {
+    "url": "assets/fonts/fa-regular-400.8c986198.woff",
+    "revision": "8c98619845ad2a91084e0b881e0671e4"
+  },
+  {
+    "url": "assets/fonts/fa-regular-400.e07d72d7.eot",
+    "revision": "e07d72d705d882694ab4a4efce9f7104"
+  },
+  {
+    "url": "assets/fonts/fa-solid-900.24f9359f.eot",
+    "revision": "24f9359f2b036d41c1aa739942f86024"
+  },
+  {
+    "url": "assets/fonts/fa-solid-900.4ff89f93.woff",
+    "revision": "4ff89f9329d4a4c28f58dd5ef7f08651"
+  },
+  {
+    "url": "assets/fonts/fa-solid-900.9c39a8a4.woff2",
+    "revision": "9c39a8a45df792adb54b794182b5dba2"
+  },
+  {
+    "url": "assets/fonts/fa-solid-900.af4698a4.ttf",
+    "revision": "af4698a4a8ea6baa01c4c8bc3969f8e2"
+  },
+  {
+    "url": "assets/fonts/Roboto-Bold.39b2c303.woff2",
+    "revision": "39b2c3031be6b4ea96e2e3e95d307814"
+  },
+  {
+    "url": "assets/fonts/Roboto-Bold.dc81817d.woff",
+    "revision": "dc81817def276b4f21395f7ea5e88dcd"
+  },
+  {
+    "url": "assets/fonts/Roboto-Bold.e31fcf18.ttf",
+    "revision": "e31fcf1885e371e19f5786c2bdfeae1b"
+  },
+  {
+    "url": "assets/fonts/Roboto-Light.3b813c2a.woff",
+    "revision": "3b813c2ae0d04909a33a18d792912ee7"
+  },
+  {
+    "url": "assets/fonts/Roboto-Light.46e48ce0.ttf",
+    "revision": "46e48ce0628835f68a7369d0254e4283"
+  },
+  {
+    "url": "assets/fonts/Roboto-Light.69f8a061.woff2",
+    "revision": "69f8a0617ac472f78e45841323a3df9e"
+  },
+  {
+    "url": "assets/fonts/Roboto-Medium.574fd0b5.woff2",
+    "revision": "574fd0b50367f886d359e8264938fc37"
+  },
+  {
+    "url": "assets/fonts/Roboto-Medium.894a2ede.ttf",
+    "revision": "894a2ede85a483bf9bedefd4db45cdb9"
+  },
+  {
+    "url": "assets/fonts/Roboto-Medium.fc78759e.woff",
+    "revision": "fc78759e93a6cac50458610e3d9d63a0"
+  },
+  {
+    "url": "assets/fonts/Roboto-Regular.2751ee43.woff2",
+    "revision": "2751ee43015f9884c3642f103b7f70c9"
+  },
+  {
+    "url": "assets/fonts/Roboto-Regular.ba3dcd89.woff",
+    "revision": "ba3dcd8903e3d0af5de7792777f8ae0d"
+  },
+  {
+    "url": "assets/fonts/Roboto-Regular.df7b648c.ttf",
+    "revision": "df7b648ce5356ea1ebce435b3459fd60"
+  },
+  {
+    "url": "assets/fonts/Roboto-Thin.7500519d.woff",
+    "revision": "7500519de3d82e33d1587f8042e2afcb"
+  },
+  {
+    "url": "assets/fonts/Roboto-Thin.94998475.ttf",
+    "revision": "94998475f6aea65f558494802416c1cf"
+  },
+  {
+    "url": "assets/fonts/Roboto-Thin.954bbdeb.woff2",
+    "revision": "954bbdeb86483e4ffea00c4591530ece"
+  },
+  {
+    "url": "assets/img/brand.734f817b.jpg",
+    "revision": "734f817bbb181d0180d7b37749769cc0"
+  },
+  {
+    "url": "assets/img/fa-brands-400.087008e7.svg",
+    "revision": "087008e7107335199638d65287e3c344"
+  },
+  {
+    "url": "assets/img/fa-regular-400.e5e78f19.svg",
+    "revision": "e5e78f190eed0ab29a60f9ebfc613f27"
+  },
+  {
+    "url": "assets/img/fa-solid-900.7407dd0e.svg",
+    "revision": "7407dd0eab45462a3e36bb3822d8edc9"
+  },
+  {
+    "url": "assets/js/0.0da48539.js",
+    "revision": "b68f1cc9f16b448b21e140a8fbf58920"
+  },
+  {
+    "url": "assets/js/1.6a5b0372.js",
+    "revision": "cce9eb02ab50b209e152e826c6238681"
+  },
+  {
+    "url": "assets/js/2.b5c09f4f.js",
+    "revision": "c7e3d03a0bb42953adb13fca389510f3"
+  },
+  {
+    "url": "assets/js/3.b50951b5.js",
+    "revision": "88de46861e71d18c120dde6bc834368d"
+  },
+  {
+    "url": "assets/js/4.04919dc1.js",
+    "revision": "bd12448920f5aa845657b76a6de8bbda"
+  },
+  {
+    "url": "assets/js/5.3097e302.js",
+    "revision": "11c6f311f82329959db77b1cfd2d1672"
+  },
+  {
+    "url": "assets/js/6.72c0c0f7.js",
+    "revision": "c0f5f7c29af260b74d26c8cf7d4ae65d"
+  },
+  {
+    "url": "assets/js/7.6cee0ec9.js",
+    "revision": "dbf0a2afd45b5afc6d239f36ef2d0343"
+  },
+  {
+    "url": "assets/js/8.1393ef80.js",
+    "revision": "e51d3f8bd577447e2524c020091b2140"
+  },
+  {
+    "url": "assets/js/app.72bb5785.js",
+    "revision": "81173ca367a41a4f923f53f8f655c07f"
+  },
+  {
+    "url": "face.png",
+    "revision": "52afd68ed8a545c47ba2371276be177a"
+  },
+  {
+    "url": "icons/192.png",
+    "revision": "68bb209813d9962fe145b690d1838fc8"
+  },
+  {
+    "url": "icons/512.png",
+    "revision": "3987835f3e7dfed8d78e559e34c49596"
+  },
+  {
+    "url": "icons/favicon.png",
+    "revision": "cfa97d05be7622e0f57799d7149b93f0"
+  },
+  {
+    "url": "index.html",
+    "revision": "b9c5ba5f8b314e28c663e1aba4dbfaf3"
+  },
+  {
+    "url": "posts/cursor-offset-at-input.html",
+    "revision": "a37d817d2485cbaef8f5dd8776e65a23"
+  },
+  {
+    "url": "posts/test-markdown.html",
+    "revision": "02a5d8f5f9ac55957193a82699d6115e"
+  },
+  {
+    "url": "posts/text-truncation.html",
+    "revision": "a9146878a11d1b82127a198812d60681"
+  },
+  {
+    "url": "posts/vue-best-practices.html",
+    "revision": "b4af0cb3b31fc473835ef515b7fc579d"
+  },
+  {
+    "url": "posts/webpack-use-lodash.html",
+    "revision": "650c22ab6699e80692f1c9e4da3f376b"
+  },
+  {
+    "url": "posts/write-good-front-end-component.html",
+    "revision": "f0e42bb366ca548bc43f11f1fe71c703"
+  },
+  {
+    "url": "tags/index.html",
+    "revision": "95d381b78f38c7840eb728143596697a"
+  }
+].concat(self.__precacheManifest || []);
+workbox.precaching.suppressWarnings();
+workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
