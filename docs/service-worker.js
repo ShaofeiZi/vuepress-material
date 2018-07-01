@@ -21,11 +21,11 @@ importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.1.0/workbox
 self.__precacheManifest = [
   {
     "url": "404.html",
-    "revision": "390faa563a436220ebf8c79bc4255ecb"
+    "revision": "6ad66ea7d0823af647c23dd9747cb602"
   },
   {
     "url": "about/index.html",
-    "revision": "f2418d3b1a061e37b6b9509ff3c6ebc3"
+    "revision": "b2527f377ad8be4f071d88ce6546cdc8"
   },
   {
     "url": "assets/css/9.styles.53136fc8.css",
@@ -188,12 +188,12 @@ self.__precacheManifest = [
     "revision": "dbf0a2afd45b5afc6d239f36ef2d0343"
   },
   {
-    "url": "assets/js/8.1393ef80.js",
-    "revision": "e51d3f8bd577447e2524c020091b2140"
+    "url": "assets/js/8.5b4c3a4b.js",
+    "revision": "79b253af5a191400e8ab69081e234026"
   },
   {
-    "url": "assets/js/app.72bb5785.js",
-    "revision": "81173ca367a41a4f923f53f8f655c07f"
+    "url": "assets/js/app.32c7eb4a.js",
+    "revision": "f443b3e95b3cf3300765861d3f72fafc"
   },
   {
     "url": "face.png",
@@ -213,35 +213,35 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "b9c5ba5f8b314e28c663e1aba4dbfaf3"
+    "revision": "0b510bc9ed2c8412089701f790048ee2"
   },
   {
     "url": "posts/cursor-offset-at-input.html",
-    "revision": "a37d817d2485cbaef8f5dd8776e65a23"
+    "revision": "80ae0b6dcc97e959903a3f9d3fb19717"
   },
   {
     "url": "posts/test-markdown.html",
-    "revision": "02a5d8f5f9ac55957193a82699d6115e"
+    "revision": "1b2b5f1e6650446b1b4d1b06059ef6a0"
   },
   {
     "url": "posts/text-truncation.html",
-    "revision": "a9146878a11d1b82127a198812d60681"
+    "revision": "e70da3d7a64ced6fc9003c477899c48b"
   },
   {
     "url": "posts/vue-best-practices.html",
-    "revision": "b4af0cb3b31fc473835ef515b7fc579d"
+    "revision": "d59dcbf6a0f2795fee787751e4f5f33f"
   },
   {
     "url": "posts/webpack-use-lodash.html",
-    "revision": "650c22ab6699e80692f1c9e4da3f376b"
+    "revision": "039e73744c899333dabc8982a3e709c9"
   },
   {
     "url": "posts/write-good-front-end-component.html",
-    "revision": "f0e42bb366ca548bc43f11f1fe71c703"
+    "revision": "ba650f43550fface7fc202a9a53748a2"
   },
   {
     "url": "tags/index.html",
-    "revision": "95d381b78f38c7840eb728143596697a"
+    "revision": "05d82ddfb9ff851fd6fa92d9c8c5940d"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
