@@ -4,7 +4,7 @@ sudo: false
 node_js:
   - "8"
 install: npm install
-script: npm run build
+script: bash ./scripts/ci.sh
 
 cache:
   directories:
