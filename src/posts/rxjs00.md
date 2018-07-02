@@ -1,5 +1,5 @@
 ---
-title: 30 天精通 RxJS (00)： 关于本系列文章
+title: 00关于本系列文章
 date: 2018-04-28 12:15:53
 tags: [RXJS]
 ---
@@ -10,7 +10,7 @@ tags: [RXJS]
 > 就如同罗辑思维罗胖老师所说的，在这资讯爆炸的时代，所有的内容生产者要思考一个新维度，那就是我们能帮读者节省多少的时间？这系列文章的核心目标就是帮助读者节省学习 RxJS 的时间，尽可能地以最低的成本精通 RxJS！
 > 
 > 
-
+<!-- more -->
 ![RxJS Logo](https://raw.githubusercontent.com/Reactive-Extensions/RxJS/master/logos/logo.png)
 
 ## 前言

@@ -1,5 +1,5 @@
 ---
-title: 30 天精通 RxJS (01)：认识 RxJS
+title: 01认识 RxJS
 date: 2018-04-29 12:15:53
 tags: [RXJS]
 ---
@@ -11,7 +11,7 @@ tags: [RXJS]
 > RxJS 是笔者认为未来几年内会非常红的 Library，RxJS 提供了一套完整的非同步解决方案，让我们在面对各种非同步行为，不管是 Event, AJAX, 还是 Animation 等，我们都可以使用相同的 API (Application Programming Interface) 做开发。
 > 
 > 
-
+<!-- more -->
 ![RxJS Logo](https://raw.githubusercontent.com/Reactive-Extensions/RxJS/master/logos/logo.png)
 
 这是【30天精通 RxJS】的 01 篇，如果还没看过 00 篇可以往这边走：
