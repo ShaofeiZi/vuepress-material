@@ -1,7 +1,7 @@
 ---
 title: 30 天精通 RxJS (01)：认识 RxJS
 date: 2018-04-29 12:15:53
-tags: [markdown]
+tags: [RXJS]
 ---
 
 # 30 天精通 RxJS (01)：认识 RxJS
