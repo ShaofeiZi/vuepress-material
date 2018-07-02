@@ -20,7 +20,7 @@ module.exports = {
     ['meta', { name: 'msapplication-TileImage', content: '/icons/192.png' }],
     ['meta', { name: 'msapplication-TileColor', content: '#3F51B5' }]
   ],
-  serviceWorker: true,
+  serviceWorker: false,
   theme: '',
   locales: {
     '/': {
@@ -62,12 +62,12 @@ module.exports = {
     menus: [
       // icons by https://fontawesome.com/icons
       {
-        text: 'Home',
+        text: '首页',
         icon: 'fa fa-home',
         url: '/'
       },
       {
-        text: 'Tags',
+        text: '标签',
         icon: 'fa fa-tag',
         url: '/tags'
       },
@@ -77,19 +77,19 @@ module.exports = {
         url: 'https://github.com/ShaofeiZi',
         external: true
       },
-      {
-        text: 'Weibo',
-        icon: 'fab fa-weibo',
-        url: 'https://weibo.com/6089509463',
-        external: true
-      },
+      // {
+      //   text: 'Weibo',
+      //   icon: 'fab fa-weibo',
+      //   url: 'https://weibo.com/6089509463',
+      //   external: true
+      // },
       {
         text: 'About',
         icon: 'fa fa-user-secret',
         url: '/about'
       }
     ],
-    socials: ['Weibo', 'QQ', 'Facebook', 'Twitter', 'GooglePlus'],
+    socials: ['Weibo', 'QQ'],
     colors: {
       // generate by https://vuetifyjs.com/zh-Hans/theme-generator
       primary: '#3F51B5',

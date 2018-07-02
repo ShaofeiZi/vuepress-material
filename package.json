@@ -8,9 +8,10 @@
   },
   "scripts": {
     "dev": "node bin/vuepress dev src",
-    "build": "node bin/vuepress build src & sh ./scripts/deploy.sh",
+    "build": "node bin/vuepress build src",
     "lint": "eslint bin lib test",
-    "start": "yarn dev && start http://localhost:8080"
+    "start": "yarn dev && start http://localhost:8080",
+    "deploy":"sh ./scripts/deploy.sh"
   },
   "repository": {
     "type": "git",
