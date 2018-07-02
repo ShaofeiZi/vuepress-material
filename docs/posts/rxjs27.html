@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>27 简易实现 Observable(二) · ShaofeiZi Blog · 做个日常记录</title>
+    <meta name="description" content="訾绍飞的博客。万物皆有裂缝处，那是光射进来的地方。">
+    <link rel="shortcut icon" href="/BLOG/favicon.ico">
+  <link rel="manifest" href="/BLOG/manifest.json">
+  <meta name="theme-color" content="#3F51B5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/BLOG/icons/192.png">
+  <link rel="mask-icon" href="/BLOG/icons/safari-pinned-tab.svg" color="#3eaf7c">
+  <meta name="msapplication-TileImage" content="/icons/192.png">
+  <meta name="msapplication-TileColor" content="#3F51B5">
+    
+    <link rel="preload" href="/BLOG/assets/css/39.styles.68f9f619.css" as="style"><link rel="preload" href="/BLOG/assets/js/app.6e007bf8.js" as="script"><link rel="preload" href="/BLOG/assets/js/7.db3917dd.js" as="script"><link rel="prefetch" href="/BLOG/assets/js/5.1e257bc0.js"><link rel="prefetch" href="/BLOG/assets/js/0.4699b1be.js"><link rel="prefetch" href="/BLOG/assets/js/1.86b842a1.js"><link rel="prefetch" href="/BLOG/assets/js/2.28dbe196.js"><link rel="prefetch" href="/BLOG/assets/js/3.3602e0cc.js"><link rel="prefetch" href="/BLOG/assets/js/4.8de28c2b.js"><link rel="prefetch" href="/BLOG/assets/js/6.caaec381.js"><link rel="prefetch" href="/BLOG/assets/js/8.24b73068.js"><link rel="prefetch" href="/BLOG/assets/js/9.291be320.js"><link rel="prefetch" href="/BLOG/assets/js/10.8e97ddd1.js"><link rel="prefetch" href="/BLOG/assets/js/11.8a57db91.js"><link rel="prefetch" href="/BLOG/assets/js/12.4aa1b551.js"><link rel="prefetch" href="/BLOG/assets/js/13.315ee62b.js"><link rel="prefetch" href="/BLOG/assets/js/14.477a1386.js"><link rel="prefetch" href="/BLOG/assets/js/15.95152fca.js"><link rel="prefetch" href="/BLOG/assets/js/16.32d5d399.js"><link rel="prefetch" href="/BLOG/assets/js/17.94eddd56.js"><link rel="prefetch" href="/BLOG/assets/js/18.df3e0c86.js"><link rel="prefetch" href="/BLOG/assets/js/19.e2a02c9e.js"><link rel="prefetch" href="/BLOG/assets/js/20.e9be3af4.js"><link rel="prefetch" href="/BLOG/assets/js/21.5e561204.js"><link rel="prefetch" href="/BLOG/assets/js/22.52327137.js"><link rel="prefetch" href="/BLOG/assets/js/23.4be981c5.js"><link rel="prefetch" href="/BLOG/assets/js/24.644073d0.js"><link rel="prefetch" href="/BLOG/assets/js/25.13b4c88a.js"><link rel="prefetch" href="/BLOG/assets/js/26.5cd78062.js"><link rel="prefetch" href="/BLOG/assets/js/27.37822df7.js"><link rel="prefetch" href="/BLOG/assets/js/28.c7ec5421.js"><link rel="prefetch" href="/BLOG/assets/js/29.04ef4dbd.js"><link rel="prefetch" href="/BLOG/assets/js/30.1c872ce3.js"><link rel="prefetch" href="/BLOG/assets/js/31.b6f125f4.js"><link rel="prefetch" href="/BLOG/assets/js/32.da3fe04f.js"><link rel="prefetch" href="/BLOG/assets/js/33.26929513.js"><link rel="prefetch" href="/BLOG/assets/js/34.603fddac.js"><link rel="prefetch" href="/BLOG/assets/js/35.476771d9.js"><link rel="prefetch" href="/BLOG/assets/js/36.abfadbff.js"><link rel="prefetch" href="/BLOG/assets/js/37.362dce09.js"><link rel="prefetch" href="/BLOG/assets/js/38.b4a51d8f.js">
+    <link rel="stylesheet" href="/BLOG/assets/css/39.styles.68f9f619.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div data-app="true" id="app" class="application theme--light"><div class="application--wrap"><div class="progress-linear blog-progress" style="height:3px;display:none;"><div class="progress-linear__background accent" style="height:3px;opacity:0.4;width:100%;"></div><div class="progress-linear__bar"><!----><div class="progress-linear__bar__determinate accent" style="width:0%;"></div></div></div><aside class="navigation-drawer navigation-drawer--close navigation-drawer--fixed navigation-drawer--is-mobile" style="height:100%;margin-top:0px;max-height:calc(100% - 0px);transform:translateX(-240px);width:240px;"><div><div class="aside-brand-wrap"><div class="aside-brand"><a href="/BLOG/" class="aside-avatar elevation-2 router-link-active"><img src="/BLOG/face.png" alt="avatar"></a><hgroup class="mt-3 variant-hide"><div class="subheading white--text">訾绍飞</div><a href="mailto:zishaofei221@gmail.com" title="zishaofei221@gmail.com" class="aside-mail primary--text text--lighten-5">zishaofei221@gmail.com</a></hgroup></div></div><hr class="divider theme--dark"><div class="list nav-list"><div class="secondary--text"><a href="/BLOG/" class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fa fa-home"></i></div></div><div class="list__tile__content">Home</div></a></div><div class="secondary--text"><a href="/BLOG/tags" class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fa fa-tag"></i></div></div><div class="list__tile__content">Tags</div></a></div><div class="secondary--text"><a href="https://github.com/ShaofeiZi" target="_blank" class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fab fa-github"></i></div></div><div class="list__tile__content">Github</div></a></div><div class="secondary--text"><a href="https://weibo.com/6089509463" target="_blank" class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fab fa-weibo"></i></div></div><div class="list__tile__content">Weibo</div></a></div><div class="secondary--text"><a href="/BLOG/about" class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fa fa-user-secret"></i></div></div><div class="list__tile__content">About</div></a></div></div></div><div class="navigation-drawer__border"></div></aside><nav class="blog-toolbar toolbar toolbar--fixed theme--dark primary" style="margin-top:0px;padding-right:0px;padding-left:0px;transform:translateY(0px);"><div class="toolbar__content" style="height:56px;"><button type="button" class="btn btn--icon"><div class="btn__content"><i class="fa fa-bars"></i></div></button><div class="toolbar__title">27 简易实现 Observable(二)</div><div class="spacer"></div><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""><!----></div><div class="menu" style="display:none;"><div class="menu__activator"><button type="button" class="btn btn--icon"><div class="btn__content"><i class="fa fa-share-alt"></i></div></button></div><div class="menu__content" style="max-height:auto;min-width:0px;max-width:auto;top:12px;left:0px;transform-origin:top right;z-index:0;display:none;"><div class="list"><div class="secondary--text"><a class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fa fa-lg fa-copy"></i></div></div><div class="list__tile__title">复制链接</div></a></div></div><input type="text" tabindex="-1" aria-hidden="true" value="" class="fake-hide"></div></div></div></nav><main class="content" style="padding-top:56px;padding-right:0px;padding-bottom:0px;padding-left:0px;"><div class="content--wrap"><div class="container blog-container grid-list-xl align-center"><div class="layout row wrap"><div class="flex mb-3 xs12"><article class="card elevation-16 post-card" style="height:auto;"><div class="card__title"><div class="flex xs12"><h2 class="display-1 mb-3">27 简易实现 Observable(二)</h2><div class="post-meta"><time datetime="2018-04-29T12:16:19.000Z" class="secondary--text post-time">2018年04月29日</time></div></div></div><div class="card__text pt-0 pb-0"><div class="flex xs12"><div class="content custom"><h1 id="_30-天精通-rxjs-27-：简易实现-observable-二"><a href="#_30-天精通-rxjs-27-：简易实现-observable-二" aria-hidden="true" class="header-anchor">#</a> 30 天精通 RxJS(27)：简易实现 Observable(二)</h1><blockquote><p>原本这篇文章是要跟前一篇写一起的，但发现两篇加起来快 3000 字了所以拆成两篇。</p></blockquote><p>前一篇文章我们已经完成了基本的 observable 以及 Observer 的简易实现，这篇文章我们会接续上一篇的内容实现简易的 Observable 类别，以及一个 creation operator 和一个 transform operator。
+</p><h2 id="建立简易-observable-类别"><a href="#建立简易-observable-类别" aria-hidden="true" class="header-anchor">#</a> 建立简易 Observable 类别</h2><p>这是我们上一篇文章写的建立 observable 实例的函数</p><pre class="language-javascript"><code><span class="token keyword">function</span> <span class="token function">create</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> observable <span class="token operator">=</span> <span class="token punctuation">{</span>
+        subscribe<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">const</span> realObserver <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observer</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span>
+            <span class="token function">subscribe</span><span class="token punctuation">(</span>realObserver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> realObserver<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>       
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> observable<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+</code></pre><p><a href="https://jsbin.com/paxevam/2/edit?js,console" target="_blank" rel="noopener noreferrer">JSBin</a></p><p>从这个函数可以看出来，回传的 observable 实例至少会有 subscribe 方法，所以最简单的 Observable 类别大概会长像下面这样</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observable</span> <span class="token punctuation">{</span>
+  <span class="token function">subscribe</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// ...做某些事</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><p>另外 create 的函数在执行时会传入一个 subscribe 的 function，这个 function 会决定 observable 的行为</p><pre class="language-javascript"><code><span class="token keyword">var</span> observable <span class="token operator">=</span> <span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">complete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'not work'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+</code></pre><p>把上面这一段改成下面这样</p><pre class="language-javascript"><code><span class="token keyword">var</span> observable <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observable</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">complete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'not work'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+</code></pre><p>所以我们的 Observable 的建构式应该会接收一个 subscribe function</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observable</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>_subscribe <span class="token operator">=</span> subscribe<span class="token punctuation">;</span> <span class="token comment">// 把 subscribe 存到属性中</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">subscribe</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// ...做某些事</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><p>接着我们就能完成 subscribe 要做的事情了</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observable</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>_subscribe <span class="token operator">=</span> subscribe<span class="token punctuation">;</span> <span class="token comment">// 把 subscribe 存到 _subscribe 属性中</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">subscribe</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> observer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observer</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_subscribe</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 就是执行一个 function 对吧</span>
+    <span class="token keyword">return</span> observer<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><p>到这里我们就成功的把 create 的函数改成 Observable 的类别了，我们可以直接来使用看看</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observable</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>_subscribe <span class="token operator">=</span> subscribe<span class="token punctuation">;</span> <span class="token comment">// 把 subscribe 存到属性中</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">subscribe</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> observer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observer</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_subscribe</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> observer<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> observable <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observable</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">complete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'not work'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword">var</span> observer <span class="token operator">=</span> <span class="token punctuation">{</span>
+  next<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  complete<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'complete!'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+observable<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+</code></pre><p><a href="https://jsbin.com/paxevam/3/edit?js,console" target="_blank" rel="noopener noreferrer">JSBin</a></p><p>当然我们可以仿 RxJS 在静态方法中加入 create，如下</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observable</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>_subscribe <span class="token operator">=</span> subscribe<span class="token punctuation">;</span> <span class="token comment">// 把 subscribe 存到属性中</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">subscribe</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> observer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observer</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_subscribe</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> observer<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+Observable<span class="token punctuation">.</span><span class="token function-variable function">create</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Observable</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+</code></pre><p>这样一来我们就可以用 <code>Observable.create</code> 建立 observable 实例实例。</p><pre class="language-javascript"><code><span class="token keyword">var</span> observable <span class="token operator">=</span> Observable<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">complete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'not work'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+</code></pre><p><a href="https://jsbin.com/paxevam/4/edit?js,console" target="_blank" rel="noopener noreferrer">JSBin</a></p><h2 id="建立-creation-operator-fromarray"><a href="#建立-creation-operator-fromarray" aria-hidden="true" class="header-anchor">#</a> 建立 creation operator - fromArray</h2><p>当我们有 Observable 类别后要建立 creation operator 就不难了，这里我们建立一个 fromArray 的方法，可以接收 array 来建立 observable，算是 Rx 的 Observable.from 的简化版本，记得 creation operators 都属于 static 方法</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observable</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>_subscribe <span class="token operator">=</span> subscribe<span class="token punctuation">;</span> <span class="token comment">// 把 subscribe 存到属性中</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">subscribe</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> observer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observer</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_subscribe</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> observer<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 建立静态方法 </span>
+Observable<span class="token punctuation">.</span><span class="token function-variable function">fromArray</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>array<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>Array<span class="token punctuation">.</span><span class="token function">isArray</span><span class="token punctuation">(</span>array<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 如果传入的参数不是阵列，则抛出例外</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'params need to be an array'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Observable</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">try</span><span class="token punctuation">{</span>
+            <span class="token comment">// 遍历每个元素并送出</span>
+            array<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>value <span class="token operator">=&gt;</span> observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            observer<span class="token punctuation">.</span><span class="token function">complete</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            observer<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> observable <span class="token operator">=</span> Observable<span class="token punctuation">.</span><span class="token function">fromArray</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+</code></pre><p><a href="https://jsbin.com/paxevam/6/edit?js,console" target="_blank" rel="noopener noreferrer">JSBin</a></p><p>上面的代码我们只是简单的用 new Observable 就可以轻松地实现我们要的功能，之后就可以用 fromArray 来建立 observable 实例。</p><p>相信读者到这之前应该都不会有太大的问题，接下来这个部份就困难的多，请读者们一定要搞懂前面的各个实现再接着往下看。</p><h2 id="建立-transform-operator-map"><a href="#建立-transform-operator-map" aria-hidden="true" class="header-anchor">#</a> 建立 transform operator - map</h2><p>相信很多人在实现 Observable 都是卡在这个阶段，因为 operators 都是回传一个新的 observable 这中间有很多细节需要注意，并且有些小技巧才能比较好的实现，在开始实现之前先让我们厘清几个重点</p><ul><li>operators(transform, filter, conditional...) 都是回传一个新个 observable</li><li>大部分的 operator 其实就是在原本 observer 外包裹一层实例，让执行 next 方法前先把元素做一次处理</li><li>operator 回传的 observable 订阅时，还是需要执行原本的 observable(资料源)，也就说我们要想办法保留原本的 observable</li></ul><p>让我们一步一步来，首先 operators 执行完会回传一个新的 observable，这个 observable 在订阅时会先去执行 operator 的行为再发送元素，所以 observable 的订阅方法就不能像现在这样直接把 observer 传给 subscribe 执行</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observable</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>_subscribe <span class="token operator">=</span> subscribe<span class="token punctuation">;</span> <span class="token comment">// 把 subscribe 存到属性中</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">subscribe</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> observer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observer</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 先做某个判断是否当前的 observable 是具有 operator 的</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">?</span><span class="token operator">?</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 用 operator 的操作</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 如果没有 operator 再直接把 observer 丢给 _subscribe</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_subscribe</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> observer<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><blockquote><p>以我们的 Observable 实现为例，这里最重要的就是 this._subscribe 执行，每当执行时就是开始发送元素。</p></blockquote><p>这里我们可以想像一下当一个 map 产生的 observable 订阅时，应该先判断出有 map 这个 operator 并且传入原本的资料源以及当前的 observer。也就是说我们的 map 至少有以下这几件事要做</p><ul><li>建立新的 observable</li><li>保存原本的 observable(资料源)，之后订阅时才有办法执行</li><li>建立并保存 operator 本身的行为，等到订阅时执行</li></ul><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observable</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 一些代码...</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">subscribe</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 一些代码...</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">map</span><span class="token punctuation">(</span>callback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> observable <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 建立新的 observable</span>
+
+    observable<span class="token punctuation">.</span>source <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span> <span class="token comment">// 保存当前的 observable(资料源)</span>
+
+    observable<span class="token punctuation">.</span>operator <span class="token operator">=</span> <span class="token punctuation">{</span>
+        call<span class="token punctuation">:</span> <span class="token punctuation">(</span>observer<span class="token punctuation">,</span> source<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span> <span class="token comment">// 执行这个 operator 的行为 }</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token comment">// 储存当前 operator 行为，并作为是否有 operator 的依据，</span>
+
+    <span class="token keyword">return</span> observable<span class="token punctuation">;</span> <span class="token comment">// 返回这个新的 observable</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><p>上面这三个步骤都是必要的，特别是用到了 <code>observable.source = this</code> 这个小技巧，来保存原本的 observable。但这里我们还有一个地方没完成就是 operator 要做的事，这个部分我们等一下再补，先把 subscribe 写完</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observable</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 一些代码...</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">subscribe</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> observer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observer</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 先用 this.operator 判断当前的 observable 是否具有 operator </span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>operator<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>operator<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>observer<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>source<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 如果没有 operator 再直接把 observer 丢给 _subscribe</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_subscribe</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> observer<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">map</span><span class="token punctuation">(</span>callback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> observable <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 建立新的 observable</span>
+
+    observable<span class="token punctuation">.</span>source <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span> <span class="token comment">// 保存当前的 observable(资料源)</span>
+
+    observable<span class="token punctuation">.</span>operator <span class="token operator">=</span> <span class="token punctuation">{</span>
+        call<span class="token punctuation">:</span> <span class="token punctuation">(</span>observer<span class="token punctuation">,</span> source<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span> <span class="token comment">// 执行这个 operator 的行为 }</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token comment">// 储存当前 operator 行为，并作为是否有 operator 的依据，</span>
+
+    <span class="token keyword">return</span> observable<span class="token punctuation">;</span> <span class="token comment">// 返回这个新的 observable</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><p>记得这里补的 subscribe 行为，已经是 map 回传新 observable 的行为，不是原本的 observable 了。</p><p>到这里我们就几乎要完成了，接着只要实现 map 这个 operator 的行为就可以囉！记得我们在前面讲的 operator 其实就是在原本的 observer 做一层包裹，让 next 执行前先对元素做处理，所以我们改写一下 Observer 并建立一个 MapObserver 来做这件事</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observer</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>destinationOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">switch</span> <span class="token punctuation">(</span>arguments<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">case</span> <span class="token number">0</span><span class="token punctuation">:</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>destination <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">safeObserver</span><span class="token punctuation">(</span>emptyObserver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token keyword">case</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>destinationOrNext<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>destination <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">safeObserver</span><span class="token punctuation">(</span>emptyObserver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 多一个判断，是否传入的 destinationOrNext 原本就是 Observer 的实例，如果是就不用在用执行 `this.safeObserver`</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>destinationOrNext <span class="token keyword">instanceof</span> <span class="token class-name">Observer</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>destination <span class="token operator">=</span> destinationOrNext<span class="token punctuation">;</span>
+          <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> destinationOrNext <span class="token operator">===</span> <span class="token string">'object'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>destination <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">safeObserver</span><span class="token punctuation">(</span>destinationOrNext<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token keyword">default</span><span class="token punctuation">:</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>destination <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">safeObserver</span><span class="token punctuation">(</span>destinationOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// ...下面都一样</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">MapObserver</span> <span class="token keyword">extends</span> <span class="token class-name">Observer</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>observer<span class="token punctuation">,</span> callback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 这里会传入原本的 observer 跟 map 的 callback</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 因为有继承所以要先执行一次父层的建构式</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>callback <span class="token operator">=</span> callback<span class="token punctuation">;</span> <span class="token comment">// 保存 callback</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>next <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>next<span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 确保 next 的 this</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">next</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>destination<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">callback</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+      <span class="token comment">// this.destination 是父层 Observer 保存的 observer 实例</span>
+      <span class="token comment">// 这里 this.callback(value) 就是 map 的操作</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>destination<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><p>上面这段代码就可以让我们包裹 observer 实例，利用实例的继承覆写原本的 next 方法。</p><p>最后我们就只要补完 map 方法就可以了</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Observable</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>subscribe<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 一些代码...</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">subscribe</span><span class="token punctuation">(</span>observerOrNext<span class="token punctuation">,</span> error<span class="token punctuation">,</span> complete<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 一些代码...</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">map</span><span class="token punctuation">(</span>callback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> observable <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Observable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    observable<span class="token punctuation">.</span>source <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+    observable<span class="token punctuation">.</span>operator <span class="token operator">=</span> <span class="token punctuation">{</span>
+      call<span class="token punctuation">:</span> <span class="token punctuation">(</span>observer<span class="token punctuation">,</span> source<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span> 
+        <span class="token comment">// 执行这个 operator 的行为</span>
+        <span class="token keyword">const</span> newObserver <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MapObserver</span><span class="token punctuation">(</span>observer<span class="token punctuation">,</span> callback<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 建立包裹后的 observer</span>
+        <span class="token comment">// 订阅原本的资料源，并回传</span>
+        <span class="token keyword">return</span> source<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>newObserver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>    
+    <span class="token keyword">return</span> observable<span class="token punctuation">;</span> 
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><p>这里做的事情就简单很多，我们只要建立包裹过的 observer，并用这个包裹后的 observer 订阅原本的 source。(记得这个 function 是在 subscribe 时执行的)</p><p><a href="https://jsbin.com/paxevam/7/edit?js,console" target="_blank" rel="noopener noreferrer">这里有</a>完整的代码，可以让大家参考。</p><p>另外这里有抽出 lift 方法的实现，其实跟我们现在的版本很接近了，只是把建立新的 observable 封装到 lift 而已。</p><h2 id="今日小结"><a href="#今日小结" aria-hidden="true" class="header-anchor">#</a> 今日小结</h2><p>今天这篇文章介绍了要如何简易的实现 Observable，虽然说是简易版本但实际上已经非常非常接近 RxJS 官方的实现了，希望读者花点耐心一步一步跟着代码做，做出来后再慢慢吸收。</p><p>不知道今天读者们有没有收获呢？ 如果有任何问题，欢迎在下方留言给我，谢谢！</p></div></div></div><div class="card__actions"><div class="flex xs12"><a href="/BLOG/tags/RXJS"><span tabindex="0" class="chip capitalize chip-tag chip--label chip--small"><span class="chip__content">RXJS</span></span></a></div></div></article></div><div class="flex text-xs-left xs6"><a href="/BLOG/posts/rxjs28.html" class="post-nav btn btn--flat btn--router"><div class="btn__content"><div class="grey--text"><i class="fa mr-1 fa-chevron-left"></i>Prev</div><div class="title mt-1 primary--text hidden-xs-only">28 Scheduler 基本观念</div></div></a></div><div class="flex text-xs-right xs6"><a href="/BLOG/posts/rxjs26.html" class="post-nav btn btn--flat btn--router"><div class="btn__content"><div class="grey--text">Next
+          <i class="fa ml-1 fa-chevron-right"></i></div><div class="title mt-1 primary--text hidden-xs-only">26 简易实例 Observable(一)</div></div></a></div><div class="flex mt-3 xs12"><div class="card" style="height:auto;"><div class="card__title"><span class="headline">Comment</span></div></div></div></div></div><footer class="footer blog-footer darken-1 mt-3 theme--dark" style="height:auto;"><div class="primary--text text--lighten-4 text-xs-center py-3 card card--flat card--tile primary" style="height:auto;"><div class="card__text pb-0">博客内容遵循 <a rel="license noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></div><div class="card__text pt-0 mt-1"><span>訾绍飞 © 2015 - 2018</span><span><!---->
+        Power by
+        <a href="https://vuepress.vuejs.org" target="_blank" rel="noopener noreferrer">VuePress</a> Theme
+        <a href="https://github.com/ShaofeiZi/BLOG" target="_blank" rel="noopener noreferrer">indigo</a></span></div></div></footer></div></main><button type="button" class="btn btn--bottom btn--floating btn--fixed btn--right accent" style="display:none;"><div class="btn__content"><i class="fa fa-lg fa-chevron-up"></i></div></button></div></div></div>
+    <script src="/BLOG/assets/js/7.db3917dd.js" defer></script><script src="/BLOG/assets/js/app.6e007bf8.js" defer></script>
+  </body>
+</html>

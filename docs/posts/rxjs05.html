@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>05 建立 Observable(一) · ShaofeiZi Blog · 做个日常记录</title>
+    <meta name="description" content="訾绍飞的博客。万物皆有裂缝处，那是光射进来的地方。">
+    <link rel="shortcut icon" href="/BLOG/favicon.ico">
+  <link rel="manifest" href="/BLOG/manifest.json">
+  <meta name="theme-color" content="#3F51B5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/BLOG/icons/192.png">
+  <link rel="mask-icon" href="/BLOG/icons/safari-pinned-tab.svg" color="#3eaf7c">
+  <meta name="msapplication-TileImage" content="/icons/192.png">
+  <meta name="msapplication-TileColor" content="#3F51B5">
+    
+    <link rel="preload" href="/BLOG/assets/css/39.styles.68f9f619.css" as="style"><link rel="preload" href="/BLOG/assets/js/app.6e007bf8.js" as="script"><link rel="preload" href="/BLOG/assets/js/29.04ef4dbd.js" as="script"><link rel="prefetch" href="/BLOG/assets/js/5.1e257bc0.js"><link rel="prefetch" href="/BLOG/assets/js/0.4699b1be.js"><link rel="prefetch" href="/BLOG/assets/js/1.86b842a1.js"><link rel="prefetch" href="/BLOG/assets/js/2.28dbe196.js"><link rel="prefetch" href="/BLOG/assets/js/3.3602e0cc.js"><link rel="prefetch" href="/BLOG/assets/js/4.8de28c2b.js"><link rel="prefetch" href="/BLOG/assets/js/6.caaec381.js"><link rel="prefetch" href="/BLOG/assets/js/7.db3917dd.js"><link rel="prefetch" href="/BLOG/assets/js/8.24b73068.js"><link rel="prefetch" href="/BLOG/assets/js/9.291be320.js"><link rel="prefetch" href="/BLOG/assets/js/10.8e97ddd1.js"><link rel="prefetch" href="/BLOG/assets/js/11.8a57db91.js"><link rel="prefetch" href="/BLOG/assets/js/12.4aa1b551.js"><link rel="prefetch" href="/BLOG/assets/js/13.315ee62b.js"><link rel="prefetch" href="/BLOG/assets/js/14.477a1386.js"><link rel="prefetch" href="/BLOG/assets/js/15.95152fca.js"><link rel="prefetch" href="/BLOG/assets/js/16.32d5d399.js"><link rel="prefetch" href="/BLOG/assets/js/17.94eddd56.js"><link rel="prefetch" href="/BLOG/assets/js/18.df3e0c86.js"><link rel="prefetch" href="/BLOG/assets/js/19.e2a02c9e.js"><link rel="prefetch" href="/BLOG/assets/js/20.e9be3af4.js"><link rel="prefetch" href="/BLOG/assets/js/21.5e561204.js"><link rel="prefetch" href="/BLOG/assets/js/22.52327137.js"><link rel="prefetch" href="/BLOG/assets/js/23.4be981c5.js"><link rel="prefetch" href="/BLOG/assets/js/24.644073d0.js"><link rel="prefetch" href="/BLOG/assets/js/25.13b4c88a.js"><link rel="prefetch" href="/BLOG/assets/js/26.5cd78062.js"><link rel="prefetch" href="/BLOG/assets/js/27.37822df7.js"><link rel="prefetch" href="/BLOG/assets/js/28.c7ec5421.js"><link rel="prefetch" href="/BLOG/assets/js/30.1c872ce3.js"><link rel="prefetch" href="/BLOG/assets/js/31.b6f125f4.js"><link rel="prefetch" href="/BLOG/assets/js/32.da3fe04f.js"><link rel="prefetch" href="/BLOG/assets/js/33.26929513.js"><link rel="prefetch" href="/BLOG/assets/js/34.603fddac.js"><link rel="prefetch" href="/BLOG/assets/js/35.476771d9.js"><link rel="prefetch" href="/BLOG/assets/js/36.abfadbff.js"><link rel="prefetch" href="/BLOG/assets/js/37.362dce09.js"><link rel="prefetch" href="/BLOG/assets/js/38.b4a51d8f.js">
+    <link rel="stylesheet" href="/BLOG/assets/css/39.styles.68f9f619.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div data-app="true" id="app" class="application theme--light"><div class="application--wrap"><div class="progress-linear blog-progress" style="height:3px;display:none;"><div class="progress-linear__background accent" style="height:3px;opacity:0.4;width:100%;"></div><div class="progress-linear__bar"><!----><div class="progress-linear__bar__determinate accent" style="width:0%;"></div></div></div><aside class="navigation-drawer navigation-drawer--close navigation-drawer--fixed navigation-drawer--is-mobile" style="height:100%;margin-top:0px;max-height:calc(100% - 0px);transform:translateX(-240px);width:240px;"><div><div class="aside-brand-wrap"><div class="aside-brand"><a href="/BLOG/" class="aside-avatar elevation-2 router-link-active"><img src="/BLOG/face.png" alt="avatar"></a><hgroup class="mt-3 variant-hide"><div class="subheading white--text">訾绍飞</div><a href="mailto:zishaofei221@gmail.com" title="zishaofei221@gmail.com" class="aside-mail primary--text text--lighten-5">zishaofei221@gmail.com</a></hgroup></div></div><hr class="divider theme--dark"><div class="list nav-list"><div class="secondary--text"><a href="/BLOG/" class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fa fa-home"></i></div></div><div class="list__tile__content">Home</div></a></div><div class="secondary--text"><a href="/BLOG/tags" class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fa fa-tag"></i></div></div><div class="list__tile__content">Tags</div></a></div><div class="secondary--text"><a href="https://github.com/ShaofeiZi" target="_blank" class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fab fa-github"></i></div></div><div class="list__tile__content">Github</div></a></div><div class="secondary--text"><a href="https://weibo.com/6089509463" target="_blank" class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fab fa-weibo"></i></div></div><div class="list__tile__content">Weibo</div></a></div><div class="secondary--text"><a href="/BLOG/about" class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fa fa-user-secret"></i></div></div><div class="list__tile__content">About</div></a></div></div></div><div class="navigation-drawer__border"></div></aside><nav class="blog-toolbar toolbar toolbar--fixed theme--dark primary" style="margin-top:0px;padding-right:0px;padding-left:0px;transform:translateY(0px);"><div class="toolbar__content" style="height:56px;"><button type="button" class="btn btn--icon"><div class="btn__content"><i class="fa fa-bars"></i></div></button><div class="toolbar__title">05 建立 Observable(一)</div><div class="spacer"></div><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""><!----></div><div class="menu" style="display:none;"><div class="menu__activator"><button type="button" class="btn btn--icon"><div class="btn__content"><i class="fa fa-share-alt"></i></div></button></div><div class="menu__content" style="max-height:auto;min-width:0px;max-width:auto;top:12px;left:0px;transform-origin:top right;z-index:0;display:none;"><div class="list"><div class="secondary--text"><a class="list__tile list__tile--link"><div class="list__tile__avatar"><div class="avatar" style="height:40px;width:40px;"><i class="fa fa-lg fa-copy"></i></div></div><div class="list__tile__title">复制链接</div></a></div></div><input type="text" tabindex="-1" aria-hidden="true" value="" class="fake-hide"></div></div></div></nav><main class="content" style="padding-top:56px;padding-right:0px;padding-bottom:0px;padding-left:0px;"><div class="content--wrap"><div class="container blog-container grid-list-xl align-center"><div class="layout row wrap"><div class="flex mb-3 xs12"><article class="card elevation-16 post-card" style="height:auto;"><div class="card__title"><div class="flex xs12"><h2 class="display-1 mb-3">05 建立 Observable(一)</h2><div class="post-meta"><time datetime="2018-04-29T12:15:57.000Z" class="secondary--text post-time">2018年04月29日</time></div></div></div><div class="card__text pt-0 pb-0"><div class="flex xs12"><div class="content custom"><h1 id="_30-天精通-rxjs-05-：-建立-observable-一"><a href="#_30-天精通-rxjs-05-：-建立-observable-一" aria-hidden="true" class="header-anchor">#</a> 30 天精通 RxJS (05)： 建立 Observable(一)</h1><blockquote><p>Observable 是 RxJS 的核心，今天让我们从如何建立 Observable 开始！</p></blockquote><p>这是【30天精通 RxJS】的 05 篇，如果还没看过 04 篇可以往这边走：
+<a href="https://github.com/ShaofeiZi/30-days-proficient-in-rxjs/blob/master/30%20%E5%A4%A9%E7%B2%BE%E9%80%9A%20RxJS%20(04)%EF%BC%9A%20%E4%BB%80%E4%B9%88%E6%98%AF%20Observable.md" target="_blank" rel="noopener noreferrer">30 天精通 RxJS (04)： 什么是 Observable ?</a></p><p>不想看文章的人，可以直接看视频喔！</p><blockquote><p>今天大家看文章一定要分清楚 <strong>Observable</strong> 跟 <strong>Observer</strong>，不要搞混。</p></blockquote><p>前几天我们把所有重要的观念及前置的知识都讲完了，今天要正式进入 RxJS 的应用，整个 RxJS 说白了就是<strong>一个核心三个重点</strong>。</p><p>一个核心是 Observable 再加上相关的 Operators(map, filter...)，这个部份是最重要的，其他三个重点本质上也是围绕着这个核心在转，所以我们会花将近 20 天的篇数讲这个部份的观念及使用案例。</p><p>另外三个重点分别是</p><ul><li>Observer(观察者)</li><li>Subject(订阅者)</li><li>Schedulers(操作符)</li></ul><p>Observer 是这三个当中一定会用到却是最简单的，所以我们今天就会把它介绍完。Subject 一般应用到的频率就相对低很多，但如果想要看懂 RxJS 相关的 Library 或 Framework，Subject 就是一定要会的重点，所以这个部份我们大概会花 3-5 天的时间讲解。至于 Schedulers 则是要解决 RxJS 衍伸出的最后一道问题，这个部份会视情况加入或是在 30 天后补完。</p><p><img src="https://redux-observable.js.org/logo/logo-small.gif" alt="redux-observable logo"></p><blockquote><p><a href="https://github.com/redux-observable/redux-observable" target="_blank" rel="noopener noreferrer">redux-observable</a> 就是用了 Subject 实例的</p></blockquote><blockquote><p>让我卖个关子，先不说 RxJS 最后一道问题是什么。</p></blockquote><p>说了这么多，我们赶快进入到今天的主题 Observable 吧！</p><h2 id="建立-observable-create"><a href="#建立-observable-create" aria-hidden="true" class="header-anchor">#</a> 建立 Observable: <code>create</code></h2><p>建立 Observable 的方法有非常多种，其中 <code>create</code> 是最基本的方法。<code>create</code> 方法在 <code>Rx.Observable</code> 事件中，要传入一个 callback function ，这个 callback function 会接收一个 observer 参数，如下</p><pre class="language-javascript"><code><span class="token keyword">var</span> observable <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable
+	<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Jerry'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// RxJS 4.x 以前的版本用 onNext</span>
+		observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Anna'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+</code></pre><p>这个 callback function 会定义 observable 将会如何发送值。</p><blockquote><p>虽然 Observable 可以被 <code>create</code>，但实际上我们通常都使用 <strong>creation operator</strong> 像是 from, of, fromEvent, fromPromise 等。这里只是为了从基本的开始讲解所以才用 <code>create</code></p></blockquote><p>我们可以订阅这个 observable，来接收他发送的值，代码如下</p><pre class="language-javascript"><code><span class="token keyword">var</span> observable <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable
+	<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Jerry'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// RxJS 4.x 以前的版本用 onNext</span>
+		observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Anna'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 订阅这个 observable	</span>
+observable<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+</code></pre><p><a href="https://jsbin.com/vetoti/1/edit?js,console,output" target="_blank" rel="noopener noreferrer">JSBin</a> | <a href="https://jsfiddle.net/s6323859/yL8n4v53/" target="_blank" rel="noopener noreferrer">JSFiddle</a></p><p>当我们订阅这个 observable，他就会依序发送 <code>'Jerry'</code><code>'Anna'</code> 两个字串。</p><blockquote><p>订阅 Observable 跟 addEventListener 在实例上其实有非常大的不同。虽然在行为上很像，但实际上 Observable 根本没有管理一个订阅的清单，这个部份的细节我们留到最后说明！</p></blockquote><p>这里有一个重点，很多人认为 RxJS 是在做非同步处理，所以所有行为都是非同步的。但其实这个观念是错的，RxJS 确实主要在处理非同步行为没错，但也同时能处理同步行为，像是上面的代码就是同步执行的。</p><p>证明如下</p><pre class="language-javascript"><code><span class="token keyword">var</span> observable <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable
+	<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Jerry'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// RxJS 4.x 以前的版本用 onNext</span>
+		observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Anna'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'start'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+observable<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'end'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+</code></pre><p><a href="https://jsbin.com/vetoti/2/edit?js,console,output" target="_blank" rel="noopener noreferrer">JSBin</a> | <a href="https://jsfiddle.net/s6323859/yL8n4v53/1/" target="_blank" rel="noopener noreferrer">JSFiddle</a></p><p>上面这段代码会印出</p><pre class="language-javascript"><code>start
+Jerry
+Anna
+end
+
+</code></pre><p>而不是</p><pre class="language-javascript"><code>start
+end
+Jerry
+Anna
+
+</code></pre><p>所以很明显的这段代码是同步执行的，当然我们可以拿它来处理非同步的行为！</p><pre class="language-javascript"><code><span class="token keyword">var</span> observable <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable
+	<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Jerry'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// RxJS 4.x 以前的版本用 onNext</span>
+		observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Anna'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+		<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+			observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'RxJS 30 days!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'start'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+observable<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'end'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+</code></pre><p><a href="https://jsbin.com/vetoti/4/edit?js,console,output" target="_blank" rel="noopener noreferrer">JSBin</a> | <a href="https://jsfiddle.net/s6323859/yL8n4v53/2/" target="_blank" rel="noopener noreferrer">JSFiddle</a></p><p>这时就会印出</p><pre class="language-javascript"><code>start
+Jerry
+Anna
+end
+RxJS <span class="token number">30</span> days<span class="token operator">!</span>
+
+</code></pre><p>从上述的代码能看得出来</p><p><strong>Observable 同时可以处理同步与非同步的行为！</strong></p><h2 id="观察者-observer"><a href="#观察者-observer" aria-hidden="true" class="header-anchor">#</a> 观察者 Observer</h2><p>Observable 可以被订阅(subscribe)，或说可以被观察，而订阅 Observable 的事件又称为 <strong>观察者(Observer)</strong>。观察者是一个具有三个方法(method)的事件，每当 Observable 发生事件时，便会呼叫观察者相对应的方法。</p><blockquote><p>注意这里的观察者(Observer)跟上一篇讲的观察者模式(Observer Pattern)无关，观察者模式是一种设计模式，是思考问题的解决过程，而这里讲的观察者是一个被定义的事件。</p></blockquote><p>观察者的三个方法(method)：</p><ul><li><p>next：每当 Observable 发发送新的值，next 方法就会被呼叫。</p></li><li><p>complete：在 Observable 没有其他的资料可以取得时，complete 方法就会被呼叫，在 complete 被呼叫之后，next 方法就不会再起作用。</p></li><li><p>error：每当 Observable 内发生错误时，error 方法就会被呼叫。</p></li></ul><p>说了这么多，我们还是直接来建立一个观察者吧！</p><pre class="language-javascript"><code><span class="token keyword">var</span> observable <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable
+	<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Jerry'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Anna'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			observer<span class="token punctuation">.</span><span class="token function">complete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'not work'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 建立一个观察者，具备 next, error, complete 三个方法</span>
+<span class="token keyword">var</span> observer <span class="token operator">=</span> <span class="token punctuation">{</span>
+	next<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	error<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	complete<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 用我们定义好的观察者，来订阅这个 observable	</span>
+observable<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span>
+
+</code></pre><p><a href="https://jsbin.com/vetoti/3/edit?js,console" target="_blank" rel="noopener noreferrer">JSBin</a> | <a href="https://jsfiddle.net/s6323859/yL8n4v53/3/" target="_blank" rel="noopener noreferrer">JSFiddle</a></p><p>上面这段代码会印出</p><pre class="language-javascript"><code>Jerry
+Anna
+complete
+
+</code></pre><p>上面的示例可以看得出来在 complete 执行后，next 就会自动失效，所以没有印出 <code>not work</code>。</p><p>下面则是发送错误的示例</p><pre class="language-javascript"><code><span class="token keyword">var</span> observable <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable
+  <span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+      observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Jerry'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Anna'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">throw</span> <span class="token string">'some exception'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      observer<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 建立一个观察者，具备 next, error, complete 三个方法</span>
+<span class="token keyword">var</span> observer <span class="token operator">=</span> <span class="token punctuation">{</span>
+	next<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	error<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Error: '</span><span class="token punctuation">,</span> error<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	complete<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 用我们定义好的观察者，来订阅这个 observable	</span>
+observable<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span>
+
+</code></pre><p><a href="https://jsbin.com/poyefom/1/edit?js,console" target="_blank" rel="noopener noreferrer">JSBin</a> | <a href="https://jsfiddle.net/s6323859/kf6dphqp/" target="_blank" rel="noopener noreferrer">JSFiddle</a></p><p>这里就会执行 error 的 function 印出 <code>Error: some exception</code>。</p><p>另外观察者可以是不完整的，他可以只具有一个 next 方法，如下</p><pre class="language-javascript"><code><span class="token keyword">var</span> observer <span class="token operator">=</span> <span class="token punctuation">{</span>
+	next<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token comment">//...</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><blockquote><p>有时候 Observable 会是一个无限的序列，例如 click 事件，这时 <code>complete</code> 方法就有可能永远不会被呼叫！</p></blockquote><p>我们也可以直接把 next, error, complete 三个 function 依序传入 <code>observable.subscribe</code>，如下：</p><pre class="language-javascript"><code>observable<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>
+    value <span class="token operator">=&gt;</span> <span class="token punctuation">{</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    error <span class="token operator">=&gt;</span> <span class="token punctuation">{</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Error: '</span><span class="token punctuation">,</span> error<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span>
+<span class="token punctuation">)</span>
+
+</code></pre><p><code>observable.subscribe</code> 会在内部自动组成 observer 事件来操作。</p><h2 id="实例细节"><a href="#实例细节" aria-hidden="true" class="header-anchor">#</a> 实例细节</h2><p>我们前面提到了，其实 Observable 的订阅跟 addEventListener 在实例上有蛮大的差异，虽然他们的行为很像！</p><p>addEventListener 本质上就是 Observer Pattern 的实例，在内部会有一份订阅清单，像是我们昨天实例的 Producer</p><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Producer</span> <span class="token punctuation">{</span>
+	<span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token keyword">this</span><span class="token punctuation">.</span>listeners <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	<span class="token function">addListener</span><span class="token punctuation">(</span>listener<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> listener <span class="token operator">===</span> <span class="token string">'function'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			<span class="token keyword">this</span><span class="token punctuation">.</span>listeners<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>listener<span class="token punctuation">)</span>
+		<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+			<span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'listener 必须是 function'</span><span class="token punctuation">)</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
+	<span class="token function">removeListener</span><span class="token punctuation">(</span>listener<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token keyword">this</span><span class="token punctuation">.</span>listeners<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>listeners<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>listener<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+	<span class="token function">notify</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token keyword">this</span><span class="token punctuation">.</span>listeners<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>listener <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+			<span class="token function">listener</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><p>我们在内部储存了一份所有的观察者清单(<code>this.listeners</code>)，在要发布通知时会对逐一的呼叫这份清单的观察者。</p><p>但在 Observable 不是这样实例的，在其内部并没有一份订阅者的清单。订阅 Observable 的行为比较像是执行一个事件的方法，并把资料传进这个方法中。</p><p>我们以下面的代码做说明</p><pre class="language-javascript"><code><span class="token keyword">var</span> observable <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable
+	<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Jerry'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+			observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Anna'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+observable<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+	next<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	error<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	complete<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+</code></pre><p>像上面这段程式，他的行为比较像这样</p><pre class="language-javascript"><code>
+<span class="token keyword">function</span> <span class="token function">subscribe</span><span class="token punctuation">(</span>observer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Jerry'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		observer<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token string">'Anna'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+	next<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	error<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	complete<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+</code></pre><p>这里可以看到 subscribe 是一个 function，这个 function 执行时会传入观察者，而我们在这个 function 内部去执行观察者的方法。</p><p><strong>订阅一个 Observable 就像是执行一个 function</strong></p><h2 id="今日小结"><a href="#今日小结" aria-hidden="true" class="header-anchor">#</a> 今日小结</h2><p>今天在讲关于建立 Observable 的实例，用到了 <code>create</code> 的方法，但大部分的内容还是在讲 Observable 几个重要的观念，如下</p><ul><li>Observable 可以同时处理<strong>同步</strong>跟<strong>非同步</strong>行为</li><li>Observer 是一个事件，这个事件具有三个方法，分别是 <strong>next</strong>, <strong>error</strong>, <strong>complete</strong></li><li>订阅一个 Observable 就像在执行一个 function</li></ul><p>不知道读者是否有所收获，如果有任何问题或建议，欢迎在下方留言给我，谢谢。</p></div></div></div><div class="card__actions"><div class="flex xs12"><a href="/BLOG/tags/RXJS"><span tabindex="0" class="chip capitalize chip-tag chip--label chip--small"><span class="chip__content">RXJS</span></span></a></div></div></article></div><div class="flex text-xs-left xs6"><a href="/BLOG/posts/rxjs06.html" class="post-nav btn btn--flat btn--router"><div class="btn__content"><div class="grey--text"><i class="fa mr-1 fa-chevron-left"></i>Prev</div><div class="title mt-1 primary--text hidden-xs-only">06 建立 Observable(二)</div></div></a></div><div class="flex text-xs-right xs6"><a href="/BLOG/posts/rxjs04.html" class="post-nav btn btn--flat btn--router"><div class="btn__content"><div class="grey--text">Next
+          <i class="fa ml-1 fa-chevron-right"></i></div><div class="title mt-1 primary--text hidden-xs-only">04什么是 Observable ?</div></div></a></div><div class="flex mt-3 xs12"><div class="card" style="height:auto;"><div class="card__title"><span class="headline">Comment</span></div></div></div></div></div><footer class="footer blog-footer darken-1 mt-3 theme--dark" style="height:auto;"><div class="primary--text text--lighten-4 text-xs-center py-3 card card--flat card--tile primary" style="height:auto;"><div class="card__text pb-0">博客内容遵循 <a rel="license noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></div><div class="card__text pt-0 mt-1"><span>訾绍飞 © 2015 - 2018</span><span><!---->
+        Power by
+        <a href="https://vuepress.vuejs.org" target="_blank" rel="noopener noreferrer">VuePress</a> Theme
+        <a href="https://github.com/ShaofeiZi/BLOG" target="_blank" rel="noopener noreferrer">indigo</a></span></div></div></footer></div></main><button type="button" class="btn btn--bottom btn--floating btn--fixed btn--right accent" style="display:none;"><div class="btn__content"><i class="fa fa-lg fa-chevron-up"></i></div></button></div></div></div>
+    <script src="/BLOG/assets/js/29.04ef4dbd.js" defer></script><script src="/BLOG/assets/js/app.6e007bf8.js" defer></script>
+  </body>
+</html>
