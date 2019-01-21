@@ -11,7 +11,7 @@
     "build": "node bin/vuepress build src",
     "lint": "eslint bin lib test",
     "start": "yarn dev && start http://localhost:8080",
-    "deploy":"sh ./scripts/deploy.sh"
+    "deploy": "sh ./scripts/deploy.sh"
   },
   "repository": {
     "type": "git",
