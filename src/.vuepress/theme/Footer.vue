@@ -5,7 +5,7 @@
     <v-card flat
             tile
             color="primary"
-            class="primary--text text--lighten-4 text-xs-center py-3">
+            class="primary--text text--lighten-4 text-xs-center py-3 card-cont">
       <v-card-text v-html="$tt('license')"
                    class="pb-0"></v-card-text>
       <v-card-text class="pt-0 mt-1">
@@ -44,6 +44,9 @@ export default {
 <style lang="stylus">
 .blog-footer {
   font-size: 13px;
+  .card-cont{
+    flex :1;
+    }
 
   .card {
     width: 100%;
