@@ -7,5 +7,5 @@ indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{js}]
-indent_size = 4
+[*.{js,mjs,vue,json,yml,yaml}]
+indent_size = 2

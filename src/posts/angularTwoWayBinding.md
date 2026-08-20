@@ -205,7 +205,7 @@ private _setUpStandalone(): void {
 ```
 
 - `setUpControl` 内有许多事件注册行为，而跟双向绑定有关的事件是 `dir.valueAccessor!.registerOnChange`，这里会传入一个回调函数
-```typescript{12}
+```typescript {12}
 export function setUpControl(control: FormControl, dir: NgControl): void {
   if (!control) _throwError(dir, 'Cannot find control with');
   if (!dir.valueAccessor) _throwError(dir, 'No value accessor for form control with');

@@ -7,7 +7,7 @@ date: 2018-07-04 01:41:21
 本文章不会对RxJS的原理进行讲解，仅讨论如何在vue中对RxJS进行集成
 <!-- more -->
 
-[关于RXJS的几篇](https://shaofeizi.github.io/BLOG/tags/RXJS/)
+[关于RXJS的几篇](/tags/?tag=RXJS)
 
 [RxJS 5 中文文档](https://github.com/RxJS-CN/RxJS-Docs-CN)
 

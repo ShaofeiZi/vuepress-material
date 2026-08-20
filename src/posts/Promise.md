@@ -151,7 +151,8 @@ getJson('api/list').then((response)=>{
 
 Promise.prototype.catch() Promise.prototype.catch方法是.then(null, rejection)的别名，用于指定发生错误时的回调函数。
 
-```javascriptgetPromise(0).then((time)=>{
+```javascript
+getPromise(0).then((time)=>{
   console.log('1',Date.now()-time)
   return Date.now()-time
 },(err)=>{
@@ -248,8 +249,10 @@ const response = Promise.race([delay(timeOut), fetch('api/list')]);
 
     Promise的`then`方法返回一个新的Promise，而不是返回this，此处在下文会有更多解释
 
-    ```javascriptpromise2 = promise1.then(alert)
-    promise2 != promise1 // true```
+    ```javascript
+    promise2 = promise1.then(alert)
+    promise2 != promise1 // true
+    ```
 
 3.  不同Promise的实现需要可以相互调用(interoperable)
 

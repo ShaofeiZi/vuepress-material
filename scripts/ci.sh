@@ -1,4 +1,6 @@
-#! /usr/bin/env node
+#!/usr/bin/env sh
 
-npm run build
-sh ./deploy.sh
+set -eu
+
+npm ci
+npm test

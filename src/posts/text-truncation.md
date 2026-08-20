@@ -43,7 +43,7 @@ description: 前端文字的截断处理
 
 类似 QQ 空间、微信、微博那种。
 
-{% jsfiddle imys/wymxhaek/3 html,css,result %}
+<!-- jsfiddle: https://jsfiddle.net/imys/wymxhaek/3/ -->
 
 使用 2 个伪元素加 1 个 a 链接实现。
 精妙之处在于使用伪元素遮挡一行文字，让 a 链接位于伪元素之上显示。

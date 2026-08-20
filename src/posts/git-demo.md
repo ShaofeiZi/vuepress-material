@@ -419,10 +419,12 @@ Commit就是提交， "commit对象"指向一个"tree对象",  这个tree对象�
 git log  -1 --pretty=raw  
 ```
 或 
-```git show -s --pretty=raw  
+```shell
+git show -s --pretty=raw
 ```
 或 
-```git cat-file -p <commit>
+```shell
+git cat-file -p <commit>
 ```
 
 ```shell

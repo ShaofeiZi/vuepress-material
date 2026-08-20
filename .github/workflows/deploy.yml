@@ -1,0 +1,86 @@
+name: Build and deploy blog
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: blog-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Verify and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out the source repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.22.2
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
+
+      - name: Run project checks
+        run: npm run check
+
+      - name: Build the production site
+        run: npm run build
+
+      - name: Verify the generated site
+        run: npm run verify
+
+      # Keep the cross-repository credential unavailable to repository scripts.
+      - name: Check deployment credentials
+        env:
+          BLOG_DEPLOY_KEY: ${{ secrets.BLOG_DEPLOY_KEY }}
+        run: |
+          if [ -z "$BLOG_DEPLOY_KEY" ]; then
+            echo "::error::The BLOG_DEPLOY_KEY repository secret is not configured."
+            exit 1
+          fi
+
+      - name: Check out the published-site repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ShaofeiZi/BLOG
+          ref: master
+          path: published-site
+          ssh-key: ${{ secrets.BLOG_DEPLOY_KEY }}
+          fetch-depth: 1
+
+      - name: Synchronize generated files
+        run: |
+          rsync --archive --delete --exclude='.git/' docs/ published-site/
+          touch published-site/.nojekyll
+
+      - name: Commit and push the deployment
+        working-directory: published-site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+
+          if git diff --cached --quiet; then
+            echo "Published site is already up to date."
+            exit 0
+          fi
+
+          git commit -m "Deploy ${GITHUB_REPOSITORY}@${GITHUB_SHA}"
+          git push origin HEAD:master
