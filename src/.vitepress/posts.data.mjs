@@ -10,6 +10,7 @@ const loader = createContentLoader('posts/*.md', {
         const frontmatter = page.frontmatter || {}
         const date = normalizeDate(frontmatterValue(page.src, 'date') || frontmatter.date)
         const description = String(frontmatter.description || '').trim()
+        const cover = String(frontmatter.cover || '').trim()
         const excerpt = withBaseForPublicImages(
           page.excerpt || description || fallbackExcerpt(page.src)
         )
@@ -23,6 +24,9 @@ const loader = createContentLoader('posts/*.md', {
           slug: decodeURIComponent(url.slice(url.lastIndexOf('/') + 1, -5)),
           excerpt,
           description: description || plainText(excerpt).slice(0, 180),
+          cover,
+          coverAlt: String(frontmatter.coverAlt || '').trim(),
+          coverLabel: String(frontmatter.coverLabel || '').trim(),
           headers: extractHeaders(page.html)
         }
       })

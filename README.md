@@ -19,7 +19,7 @@ npm test
 
 生产文件生成到 `docs/`。验证脚本会检查 55 篇文章、分页与 49 个大小写敏感标签、`/BLOG/` base、manifest、Vite 入口，以及 HTML/CSS 引用的全部本地静态资源。标签筛选使用 `/tags/?tag=...`，避免不同平台对仅大小写不同文件名的处理不一致。`npm run deploy` 只在本地执行这些预部署检查，不会直接推送远程仓库。
 
-直接依赖固定为当前 npm `latest` 的 VitePress 1.6.4 和 Vue 3.5.41。VitePress 默认依赖的 Vite 5 已出现安全公告，因此通过 `overrides` 使用其 Vue 插件官方兼容范围内、已修复公告的 Vite 6.4.3；Vite 8 与当前稳定版 VitePress 的构建插件不兼容。
+直接依赖固定为当前 npm `latest` 的 VitePress 1.6.4 和 Vue 3.5.41。VitePress 默认依赖的 Vite 5 已出现安全公告，因此通过 `overrides` 使用其 Vue 插件官方兼容范围内、已修复公告的 Vite 6.4.3；Vite 8 与当前稳定版 VitePress 的构建插件不兼容。数学公式使用 VitePress 原生 MathJax 构建期渲染，不依赖客户端 CDN。
 
 ## 自动部署
 

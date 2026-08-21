@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">重叠实验基础设施</title>
+  <desc id="desc">一股请求流量依次穿过三个独立实验层，每层选择一个实验。</desc>
+  <rect width="1200" height="630" fill="#f7f5ef"/>
+  <rect width="1200" height="12" fill="#3f51b5"/>
+
+  <g fill="none" stroke="#d8d9df" stroke-width="1" opacity="0.7">
+    <path d="M72 86H548M72 548H548"/>
+    <path d="M72 86V548M548 86V548" stroke-dasharray="4 8"/>
+  </g>
+
+  <g font-family="Roboto, Arial, sans-serif">
+    <text x="72" y="70" fill="#676b7b" font-size="15" font-weight="500" letter-spacing="3">EXPERIMENT INFRASTRUCTURE</text>
+    <text x="72" y="184" fill="#3f51b5" font-size="72" font-weight="700" letter-spacing="-2">MORE</text>
+    <text x="72" y="270" fill="#25283d" font-size="72" font-weight="700" letter-spacing="-2">BETTER</text>
+    <text x="72" y="356" fill="#c2185b" font-size="72" font-weight="700" letter-spacing="-2">FASTER</text>
+
+    <g font-size="14" font-weight="500" letter-spacing="1.5">
+      <circle cx="80" cy="428" r="7" fill="#3f51b5"/>
+      <text x="100" y="433" fill="#4d5163">DOMAIN</text>
+      <rect x="210" y="421" width="14" height="14" fill="#4f8f8a"/>
+      <text x="238" y="433" fill="#4d5163">LAYER</text>
+      <path d="M352 428h16" stroke="#c2185b" stroke-width="5"/>
+      <text x="382" y="433" fill="#4d5163">EXPERIMENT</text>
+    </g>
+
+    <text x="72" y="522" fill="#7c7f8d" font-size="14" font-family="Consolas, Monaco, monospace">mod = f(id, layer) % 1000</text>
+  </g>
+
+  <g transform="translate(604 54)">
+    <rect x="0" y="0" width="532" height="520" rx="4" fill="#fffdf9" stroke="#303f9f" stroke-width="2" stroke-dasharray="8 8"/>
+    <rect x="18" y="-11" width="104" height="24" fill="#f7f5ef"/>
+    <text x="28" y="6" fill="#303f9f" font-size="13" font-family="Roboto, Arial, sans-serif" font-weight="500" letter-spacing="2">DOMAIN 01</text>
+
+    <g font-family="Roboto, Arial, sans-serif">
+      <g transform="translate(32 56)">
+        <rect width="450" height="112" rx="4" fill="#e8eaf6" stroke="#303f9f" stroke-width="2"/>
+        <rect width="10" height="112" fill="#3f51b5"/>
+        <text x="28" y="34" fill="#303f9f" font-size="20" font-weight="700">L₁</text>
+        <text x="28" y="76" fill="#656979" font-size="12" letter-spacing="1.4">UI LAYER</text>
+        <rect x="142" y="26" width="112" height="60" rx="3" fill="#ffffff" stroke="#b8bbc8"/>
+        <text x="166" y="61" fill="#656979" font-size="12" letter-spacing="1">CONTROL</text>
+        <rect x="274" y="26" width="142" height="60" rx="3" fill="#c2185b"/>
+        <text x="294" y="47" fill="#ffffff" font-size="13" font-weight="700" letter-spacing="1">TEST A</text>
+      </g>
+
+      <g transform="translate(54 204)">
+        <rect width="450" height="112" rx="4" fill="#e5f0ee" stroke="#38766f" stroke-width="2"/>
+        <rect width="10" height="112" fill="#4f8f8a"/>
+        <text x="28" y="34" fill="#38766f" font-size="20" font-weight="700">L₂</text>
+        <text x="28" y="76" fill="#656979" font-size="12" letter-spacing="1.4">SEARCH LAYER</text>
+        <rect x="142" y="26" width="112" height="60" rx="3" fill="#ffffff" stroke="#b8bbc8"/>
+        <text x="166" y="61" fill="#656979" font-size="12" letter-spacing="1">CONTROL</text>
+        <rect x="274" y="26" width="142" height="60" rx="3" fill="#38766f"/>
+        <text x="294" y="47" fill="#ffffff" font-size="13" font-weight="700" letter-spacing="1">TEST B</text>
+        <rect x="126" y="14" width="306" height="84" rx="4" fill="none" stroke="#38766f" stroke-width="1.5" stroke-dasharray="5 5"/>
+      </g>
+
+      <g transform="translate(24 352)">
+        <rect width="450" height="112" rx="4" fill="#fff1d2" stroke="#b77a11" stroke-width="2"/>
+        <rect width="10" height="112" fill="#e9b44c"/>
+        <text x="28" y="34" fill="#8a5a08" font-size="20" font-weight="700">L₃</text>
+        <text x="28" y="76" fill="#656979" font-size="12" letter-spacing="1.4">ADS LAYER</text>
+        <rect x="142" y="26" width="112" height="60" rx="3" fill="#ffffff" stroke="#b8bbc8"/>
+        <text x="166" y="61" fill="#656979" font-size="12" letter-spacing="1">CONTROL</text>
+        <rect x="274" y="26" width="142" height="60" rx="3" fill="#e9b44c"/>
+        <text x="294" y="47" fill="#25283d" font-size="13" font-weight="700" letter-spacing="1">TEST C</text>
+      </g>
+    </g>
+
+    <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+      <path d="M430 24V82H403V112H448V230H403V260H470V378H403V408H440V496" stroke="#c2185b" stroke-width="6"/>
+      <path d="M398 82H230V112" stroke="#8d91a0" stroke-width="3" stroke-dasharray="7 7"/>
+      <path d="M448 230H252V260" stroke="#8d91a0" stroke-width="3" stroke-dasharray="7 7"/>
+      <path d="M470 378H222V408" stroke="#8d91a0" stroke-width="3" stroke-dasharray="7 7"/>
+    </g>
+
+    <g fill="#ffffff" stroke="#c2185b" stroke-width="4">
+      <circle cx="403" cy="112" r="9"/>
+      <circle cx="403" cy="260" r="9"/>
+      <circle cx="403" cy="408" r="9"/>
+    </g>
+    <path d="M440 504l-9-15h18z" fill="#c2185b"/>
+    <text x="394" y="20" fill="#c2185b" font-size="12" font-family="Roboto, Arial, sans-serif" font-weight="700" letter-spacing="1.5">REQUEST 042</text>
+  </g>
+</svg>

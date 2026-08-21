@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { createHash } from 'node:crypto'
 import { lstat, readFile, readdir } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -192,6 +193,17 @@ function parseAttributes (tagSource) {
   return attributes
 }
 
+function findMetaContent (html, key) {
+  const tagPattern = /<meta\b[^>]*>/gi
+  for (const match of html.matchAll(tagPattern)) {
+    const attributes = parseAttributes(match[0])
+    if (attributes.get('property') === key || attributes.get('name') === key) {
+      return attributes.get('content') || ''
+    }
+  }
+  return ''
+}
+
 function extractCssUrls (source) {
   const urls = []
   const pattern = /url\(\s*(?:(['"])(.*?)\1|([^)]*?))\s*\)/gi
@@ -344,6 +356,71 @@ async function verifyRenderedSemantics () {
   const imageArticle = await readFile(path.join(OUTPUT_DIR, 'posts', 'angular_concept.html'), 'utf8')
   if (!imageArticle.includes('/BLOG/images/angular_concept/001.png')) {
     fail('Representative article image is missing the production base.', 'article-image-base')
+  }
+
+  const mathArticle = await readFile(path.join(OUTPUT_DIR, 'posts', 'overlapping-experiment-infrastructure.html'), 'utf8')
+  for (const expected of ['<mjx-container', 'jax="SVG"', 'tabindex="0"', '<mjx-assistive-mml', '/BLOG/images/overlapping-experiment-infrastructure/cover.svg']) {
+    if (!mathArticle.includes(expected)) {
+      fail(`Math article is missing ${JSON.stringify(expected)}.`, `article-math:${expected}`)
+    }
+  }
+  if (/overlapping-experiment-infrastructure\/image-(?:0[4-9]|1\d|2[0-6]|2[89])\.png/.test(mathArticle)) {
+    fail('Math article still renders formula images instead of native equations.', 'article-math-image-fallback')
+  }
+  const mathContainers = (mathArticle.match(/<mjx-container/g) || []).length
+  const displayMathContainers = (mathArticle.match(/<mjx-container tabindex="0"/g) || []).length
+  if (mathContainers !== 32 || displayMathContainers !== 5) {
+    fail(`Math article rendered ${mathContainers} equations (${displayMathContainers} display) instead of 32 (5 display).`, 'article-math-count')
+  }
+  for (const expectedMathMl of ['<mn>10.5</mn>', '<mtext>avg queries per cookie_mod</mtext>']) {
+    if (!mathArticle.includes(expectedMathMl)) {
+      fail(`Math article is missing key MathML ${JSON.stringify(expectedMathMl)}.`, `article-math-content:${expectedMathMl}`)
+    }
+  }
+  if (/<merror\b|data-mjx-error|mathcolor="red"/.test(mathArticle)) {
+    fail('Math article contains a MathJax rendering error.', 'article-math-error')
+  }
+  const assistiveMath = [...mathArticle.matchAll(/<mjx-assistive-mml\b[^>]*>(<math\b[\s\S]*?<\/math>)<\/mjx-assistive-mml>/g)]
+    .map(match => match[1].replace(/\s+/g, ' '))
+  const mathFingerprint = createHash('sha256').update(assistiveMath.join('\n')).digest('hex')
+  if (mathFingerprint !== 'e87b9a0b0ceea7935464019f8c0537f9c5841f884cc5304ac1575bd874b40894') {
+    fail(`Math article content fingerprint changed to ${mathFingerprint}.`, 'article-math-fingerprint')
+  }
+  const socialImage = 'https://shaofeizi.github.io/BLOG/images/overlapping-experiment-infrastructure/cover.png'
+  const socialImageAlt = '重叠实验基础设施示意：一股请求流量穿过三个独立实验层，每层选择一个实验'
+  const articleTitle = '实验基础设施：更多、更好、更快地实验'
+  const articleDescription = 'Google 重叠实验基础设施论文的中文整理，介绍域、层、实验、流量分配以及支撑规模化实验的工具与流程。'
+  const expectedSocialMeta = new Map([
+    ['og:title', articleTitle],
+    ['og:description', articleDescription],
+    ['og:type', 'article'],
+    ['og:url', 'https://shaofeizi.github.io/BLOG/posts/overlapping-experiment-infrastructure.html'],
+    ['og:image', socialImage],
+    ['og:image:alt', socialImageAlt],
+    ['og:image:type', 'image/png'],
+    ['og:image:width', '1200'],
+    ['og:image:height', '630'],
+    ['twitter:card', 'summary_large_image'],
+    ['twitter:title', articleTitle],
+    ['twitter:description', articleDescription],
+    ['twitter:image', socialImage],
+    ['twitter:image:alt', socialImageAlt]
+  ])
+  for (const [key, expected] of expectedSocialMeta) {
+    const actual = findMetaContent(mathArticle, key)
+    if (actual !== expected) {
+      fail(`Math article metadata ${key} is ${JSON.stringify(actual)} instead of ${JSON.stringify(expected)}.`, `article-meta:${key}`)
+    }
+  }
+  if (!indexHtml.includes('/BLOG/images/overlapping-experiment-infrastructure/cover.svg')) {
+    fail('Home page is missing the featured article cover.', 'home-featured-cover')
+  }
+  const postOutputs = (await readdir(path.join(OUTPUT_DIR, 'posts'))).filter(file => file.endsWith('.html'))
+  for (const fileName of postOutputs.filter(file => file !== 'overlapping-experiment-infrastructure.html')) {
+    const legacyHtml = await readFile(path.join(OUTPUT_DIR, 'posts', fileName), 'utf8')
+    if (legacyHtml.includes('<mjx-container')) {
+      fail(`Non-math article ${fileName} contains accidental MathJax output.`, `legacy-math:${fileName}`)
+    }
   }
 }
 

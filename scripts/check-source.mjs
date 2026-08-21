@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process'
 import { lstat, readFile, readdir } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import matter from 'gray-matter'
 import config from '../src/.vitepress/config.mjs'
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url))
@@ -116,6 +117,10 @@ function parsePostFrontmatter (source, fileName) {
   const title = block.match(/^title:\s*(.*?)\s*$/m)?.[1] || ''
   const date = block.match(/^date:\s*(.*?)\s*$/m)?.[1] || ''
   const tagsSource = block.match(/^tags:\s*\[([\s\S]*?)\]\s*$/m)?.[1]
+  const parsed = matter(source).data || {}
+  const cover = typeof parsed.cover === 'string' ? parsed.cover.trim() : ''
+  const socialImage = typeof parsed.socialImage === 'string' ? parsed.socialImage.trim() : ''
+  const coverAlt = typeof parsed.coverAlt === 'string' ? parsed.coverAlt.trim() : ''
   check(Boolean(title.trim()), `${fileName}: title must be a non-empty string`)
   check(
     /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(date) && !Number.isNaN(Date.parse(date.replace(' ', 'T') + '+08:00')),
@@ -135,7 +140,11 @@ function parsePostFrontmatter (source, fileName) {
     if (tag) tags.add(tag)
   }
 
-  return { title: title.trim(), date, tags: postTags }
+  check(!cover || cover.startsWith('/images/'), `${fileName}: cover must be a /images/ public asset`)
+  check(!socialImage || socialImage.startsWith('/images/'), `${fileName}: socialImage must be a /images/ public asset`)
+  check(!cover || Boolean(coverAlt), `${fileName}: coverAlt is required when cover is set`)
+
+  return { title: title.trim(), date, tags: postTags, cover, socialImage }
 }
 
 function extractLocalImagePaths (source) {
@@ -183,19 +192,28 @@ async function main () {
   check(packageJson.type === 'module', 'package.json type must be module')
   check(packageJson.dependencies?.vitepress === '1.6.4', 'VitePress must be pinned to 1.6.4')
   check(packageJson.dependencies?.vue === '3.5.41', 'Vue must be pinned to 3.5.41')
+  check(packageJson.devDependencies?.['gray-matter'] === '4.0.3', 'Frontmatter validation must use pinned gray-matter 4.0.3')
+  check(packageJson.devDependencies?.['markdown-it-mathjax3'] === '4.3.2', 'MathJax Markdown support must be pinned to 4.3.2')
+  check(packageJson.overrides?.['@xmldom/xmldom'] === '0.9.11', 'MathJax XML parsing must use the fixed @xmldom/xmldom 0.9.11 release')
   check(packageJson.overrides?.vite === '6.4.3', 'Vite must be pinned to the latest VitePress-compatible secure release 6.4.3')
   check(packageJson.packageManager === 'npm@10.9.7', 'packageManager must pin npm 10.9.7')
   check(packageJson.engines?.node === '22.22.x', 'package.json engines.node must be 22.22.x')
   check(nvmVersion === '22.22.2', '.nvmrc must select Node 22.22.2')
   check(lockRoot.name === packageJson.name && lockRoot.version === packageJson.version, 'package-lock root metadata does not match package.json')
   check(JSON.stringify(lockRoot.dependencies) === JSON.stringify(packageJson.dependencies), 'package-lock root dependencies do not match package.json')
+  check(JSON.stringify(lockRoot.devDependencies) === JSON.stringify(packageJson.devDependencies), 'package-lock root devDependencies do not match package.json')
   check(JSON.stringify(lockRoot.engines) === JSON.stringify(packageJson.engines), 'package-lock root engine does not match package.json')
+  check(lockfile.packages?.['node_modules/gray-matter']?.version === '4.0.3', 'package-lock must resolve gray-matter 4.0.3')
+  check(lockfile.packages?.['node_modules/markdown-it-mathjax3']?.version === '4.3.2', 'package-lock must resolve markdown-it-mathjax3 4.3.2')
+  check(lockfile.packages?.['node_modules/@xmldom/xmldom']?.version === '0.9.11', 'package-lock must resolve @xmldom/xmldom 0.9.11')
   check(lockfile.packages?.['node_modules/vite']?.version === '6.4.3', 'package-lock must resolve Vite 6.4.3')
 
   check(config.base === SITE_BASE, `VitePress base must be ${SITE_BASE}`)
   check(config.outDir === '../docs', 'VitePress outDir must be ../docs')
   check(config.cleanUrls === false, 'VitePress cleanUrls must remain false to preserve .html URLs')
   check(config.srcExclude?.includes('README.md'), 'VitePress srcExclude must include README.md')
+  check(Boolean(config.markdown?.math), 'VitePress native math rendering must remain enabled')
+  check(typeof config.markdown?.math?.tex?.formatError === 'function', 'MathJax must fail the build when a formula cannot be parsed')
   const pageSize = config.themeConfig?.pagination?.pageSize
   check(Number.isInteger(pageSize) && pageSize > 0, 'themeConfig.pagination.pageSize must be a positive integer')
 
@@ -213,7 +231,9 @@ async function main () {
   check(postFiles.length === EXPECTED_POST_COUNT, `Expected ${EXPECTED_POST_COUNT} posts; found ${postFiles.length}`)
   for (const fileName of postFiles) {
     const source = await readFile(path.join(POSTS_DIR, fileName), 'utf8')
-    parsePostFrontmatter(source, fileName)
+    const post = parsePostFrontmatter(source, fileName)
+    if (post?.cover) await checkPublicReference(post.cover, fileName)
+    if (post?.socialImage) await checkPublicReference(post.socialImage, fileName)
     for (const reference of extractLocalImagePaths(source)) {
       await checkPublicReference(reference, fileName)
     }

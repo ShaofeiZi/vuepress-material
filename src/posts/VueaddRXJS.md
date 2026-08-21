@@ -55,7 +55,7 @@ export default {
 
 ```
 
-如上所示，Rx.Observable.of(23)在被订阅时会被发出值23，this.setName$则是一个流事件，它在domStreams中定义，实际它是一个Subject（具体可查阅RxJS中对Subject的定义），在用户点击按钮的时候则会发出该点击源的数据，如上图的map operator中，会接收数据源发出的event对象（这里我们没有使用该对象，仅仅是返回一个我们定义的字符串'myName'），startWith则是初始化name$的值为空字符串，这里vue-rx已经帮我们做了一个隐式的subscribe绑定，所以值23会马上发出最后赋值到age$上，进而绑定到视图，在这里，我们可以把age$与name$看成是一个有数据源发出的可观察流的结果，这条流是响应的，初始发出的值会经过各种operator处理后响应到页面上。
+如上所示，Rx.Observable.of(23)在被订阅时会被发出值23，`this.setName$`则是一个流事件，它在domStreams中定义，实际它是一个Subject（具体可查阅RxJS中对Subject的定义），在用户点击按钮的时候则会发出该点击源的数据，如上图的map operator中，会接收数据源发出的event对象（这里我们没有使用该对象，仅仅是返回一个我们定义的字符串'myName'），startWith则是初始化`name$`的值为空字符串，这里vue-rx已经帮我们做了一个隐式的subscribe绑定，所以值23会马上发出最后赋值到`age$`上，进而绑定到视图，在这里，我们可以把`age$`与`name$`看成是一个有数据源发出的可观察流的结果，这条流是响应的，初始发出的值会经过各种operator处理后响应到页面上。
 
 
 # 集成vue-rx后使用RxJS

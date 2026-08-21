@@ -11,10 +11,14 @@ const props = defineProps({
 
 const excerpt = computed(() => props.post.excerpt || props.post.description || '')
 const excerptIsHtml = computed(() => /<[^>]+>/.test(excerpt.value))
+const coverUrl = computed(() => props.post.cover ? withBase(props.post.cover) : '')
 </script>
 
 <template>
-  <article class="post-card material-card">
+  <article class="post-card material-card" :class="{ 'has-cover': coverUrl }">
+    <a v-if="coverUrl" class="post-cover-link" :href="withBase(post.url)" tabindex="-1" aria-hidden="true">
+      <img class="post-cover" :src="coverUrl" alt="">
+    </a>
     <header>
       <h2><a class="post-title-link" :href="withBase(post.url)">{{ post.title }}</a></h2>
       <time v-if="post.date" :datetime="post.date" class="post-time">

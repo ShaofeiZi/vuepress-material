@@ -243,7 +243,7 @@ const response = Promise.race([delay(timeOut), fetch('api/list')]);
 
 1.  只有一个`then`方法，没有`catch`，`race`，`all`等方法，甚至没有构造函数
 
-    Promise标准中仅指定了Promise对象的`then`方法的行为，其它一切我们常见的方法/函数都并没有指定，包括`catch`，`race`，`all`等常用方法，甚至也没有指定该如何构造出一个Promise对象，另外then也没有一般实现中（Q, $q等）所支持的第三个参数，一般称onProgress
+    Promise标准中仅指定了Promise对象的`then`方法的行为，其它一切我们常见的方法/函数都并没有指定，包括`catch`，`race`，`all`等常用方法，甚至也没有指定该如何构造出一个Promise对象，另外then也没有一般实现中（Q, `$q`等）所支持的第三个参数，一般称onProgress
 
 2.  `then`方法返回一个新的Promise
 
@@ -935,7 +935,7 @@ new Promise(function(){ // promise1
   .then() // returns promise4
 ```
 
-看起来，promise1，2，3，4都没有处理函数，那是不是会在控制台把这个错误输出4次呢，并不会，实际上，promise1，2，3都隐式的有处理函数，就是then的默认参数，各位应该还记得then的默认参数最终是被push到了Promise的callback数组里。只有promise4是真的没有任何callback，因为压根就没有调用它的then方法。 事实上，Bluebird和ES6 Promise都做了类似的处理，在Promise被reject但又没有callback时，把错误输出到控制台。 Q使用了done方法来达成类似的目的，$q在最新的版本中也加入了类似的功能。 Angular里的$q跟其它Promise的交互 一般来说，我们不会在Angular里使用其它的Promise，因为Angular已经集成了$q，但有些时候我们在Angular里需要用到其它的库（比如LeanCloud的JS SDK），而这些库或是封装了ES6的Promise，或者是自己实现了Promise，这时如果你在Angular里使用这些库，就有可能发现视图跟Model不同步。究其原因，是因为$q已经集成了Angular的digest loop机制，在Promise被resolve或reject时触发digest，而其它的Promise显然是不会集成的，所以如果你运行下面这样的代码，视图是不会同步的：
+看起来，promise1，2，3，4都没有处理函数，那是不是会在控制台把这个错误输出4次呢，并不会，实际上，promise1，2，3都隐式的有处理函数，就是then的默认参数，各位应该还记得then的默认参数最终是被push到了Promise的callback数组里。只有promise4是真的没有任何callback，因为压根就没有调用它的then方法。 事实上，Bluebird和ES6 Promise都做了类似的处理，在Promise被reject但又没有callback时，把错误输出到控制台。 Q使用了done方法来达成类似的目的，`$q`在最新的版本中也加入了类似的功能。 Angular里的`$q`跟其它Promise的交互 一般来说，我们不会在Angular里使用其它的Promise，因为Angular已经集成了`$q`，但有些时候我们在Angular里需要用到其它的库（比如LeanCloud的JS SDK），而这些库或是封装了ES6的Promise，或者是自己实现了Promise，这时如果你在Angular里使用这些库，就有可能发现视图跟Model不同步。究其原因，是因为`$q`已经集成了Angular的digest loop机制，在Promise被resolve或reject时触发digest，而其它的Promise显然是不会集成的，所以如果你运行下面这样的代码，视图是不会同步的：
 
 ```javascript
 app.controller(function($scope) {
@@ -945,7 +945,7 @@ app.controller(function($scope) {
 })
 ```
 
-Promise结束时并不会触发digest，所以视图没有同步。$q上正好有个when方法，它可以把其它的Promise转换成$q的Promise（有些Promise实现中提供了Promise.cast函数，用于将一个thenable转换为它的Promise），问题就解决了：
+Promise结束时并不会触发digest，所以视图没有同步。`$q`上正好有个when方法，它可以把其它的Promise转换成`$q`的Promise（有些Promise实现中提供了Promise.cast函数，用于将一个thenable转换为它的Promise），问题就解决了：
 
 ```javascript
 app.controller(function($scope, $q) {

@@ -3,6 +3,10 @@ title: 实验基础设施：更多、更好、更快地实验
 date: 2026-08-21 11:27:39
 tags: [ABTest, 实验平台, Growth Hacking, 数据分析]
 description: Google 重叠实验基础设施论文的中文整理，介绍域、层、实验、流量分配以及支撑规模化实验的工具与流程。
+cover: /images/overlapping-experiment-infrastructure/cover.svg
+socialImage: /images/overlapping-experiment-infrastructure/cover.png
+coverAlt: 重叠实验基础设施示意：一股请求流量穿过三个独立实验层，每层选择一个实验
+coverLabel: RESEARCH NOTE · EXPERIMENTATION
 ---
 
 `Google` 这篇发表于 2010 年的关于『实验基础设施』设计的论文，现在看来仍然是关于这个领域最有深度和体系的资料。不单说明了，实验设施的系统设计，还包含实验的进阶主题如：实验可信度、敏感度、围绕实验数据驱动的整体流程。
@@ -38,9 +42,7 @@ description: Google 重叠实验基础设施论文的中文整理，介绍域、
 
 对于实验设施，有两个很明显的选择，或是要支持单层实验或是要支持多因素实验。单层实验意味着每个请求最多只会通过一个实验，单层实验是很容易使用的，并且也具有灵活性，但是扩展性不足。多因素实验在统计学上进行了大量的讨论，多因素实验中每个参数（因素）都可以被独立地实验，在实验中每个参数（因素）都可以独立地被实验，每个实验中只测试一个参数，这个参数会覆盖所有其它实验中的其它参数。每个查询可以同时在 `N`个实验中，其中  `N`是参数的个数。虽然这种方法进行了多年的研究和实践，但对于`Google`的系统却不适用，因为`Google`有几千个参数，并且不能被独立的分析。例如：要对两个参数进行分析，一个参数是`Web`页面的背景色，另一个是文字的颜色，虽然『蓝色』对两个参数都是合法值，但是如果两个参数都取『蓝色』，那么页面是不可读的。
 
-本文提出的解决方案是将参数分成子集，每个参数子集包含相互不能独立修改的参数。一个参数子集会与一个包含实验的层相关联，不同层的实验的流量是正交的。每个查询（`query`）可以在  `N`
-
-个实验中，其中 `N`是层的数量。
+本文提出的解决方案是将参数分成子集，每个参数子集包含相互不能独立修改的参数。一个参数子集会与一个包含实验的层相关联，不同层的实验流量是正交的。每个查询（`query`）可以同时进入 $N$ 个实验，其中 $N$ 是层的数量。
 
 ## 2. 相关工作成果【略】
 
@@ -53,7 +55,7 @@ description: Google 重叠实验基础设施论文的中文整理，介绍域、
 ![图 1：请求经过多个模块](/images/overlapping-experiment-infrastructure/image-01.png)
 
 
-图1：一个请求经过多个模块的例子，信息（和时间）都是从左流向右
+<p class="figure-caption">图 1：一个请求经过多个模块，信息与时间均从左向右流动</p>
 
 每个服务都有二进制推送和数据推送。二进制推送是指发布新的程序（`Bug`修复、性能提升、新特性，等等），它一定时期进行一次（比如每周）。数据推送更频繁（比如，按需或是每几小时推送一次），并且这还涉及了推送更新的数据到相应的程序。数据推送中还包含了默认参数配置，参数是用来配置程序如何运行，比如，控制结果如何展示的服务也许有一个参数是决定顶部广告块的背景色。再比如，预测`CTR`的服务可能有参数是控制学习速度和收敛速度的。程序可能有几百个参数。新的特性可能会添加一个或多个参数：最简单的场景是，一个参数可以控制打开或关闭新特性，在更复杂的场景中，也许有多个参数决定新特性如果展示，有数值阈值决定新的特性是否被展示，等等。将程序和数据分离，意味着如果我们可以找到合适的分离方式，我们就可以同时得到快速影响线上服务的通路，和慢速影响线上服务的通路（程序是慢的通路，改变参数值是快速的通路）。
 
@@ -88,7 +90,7 @@ description: Google 重叠实验基础设施论文的中文整理，介绍域、
 
 ![图 2：重叠分层示意图](/images/overlapping-experiment-infrastructure/image-02.png)
 
-图2：重叠分层示意图
+<p class="figure-caption">图 2：重叠分层示意图</p>
 
 这种嵌套看起来有些复杂，但它有几个好处。
 
@@ -114,7 +116,7 @@ description: Google 重叠实验基础设施论文的中文整理，介绍域、
 
 ![图 3：请求进入域、层和实验的逻辑](/images/overlapping-experiment-infrastructure/image-03.png)
 
-图3：决定请求进入域、层、实验的逻辑
+<p class="figure-caption">图 3：决定请求进入域、层和实验的逻辑</p>
 
 分配条件是直接在实验（或域）的配置中指定的，这允许我们在实验的创建时基于数据文件对流量分配冲突进行检测。如在流量分配类型一节中提到的一样，如果一个请求先满足了流量分类顺序中的一个_类型\_，它不会再考虑下面的分配类型，即使它不满足这一种分配类型的分配条件。这很重要，最好以一个例子来说明，如果我们通过特定的`cookie`取模来得到实验的流量，我们将会得到一个无偏的分配。考虑一下一个指定`cookie`取模上有两个实验，一个分配条件为日语流量，另一个分配条件是英语流量，而这个`cookie`取模剩余的流量（即不是日语和英语的流量）将不会分配给以`cookie`分配方式的其它实验，这是为了避免分配顺序后几种分配方式的偏置，重要的逻辑是不再将上述剩余的流量分配给分配顺序后几种分配方式的实验了。我们通过将有偏的剩余流量分配一个偏置`id`来避免偏置。
 
@@ -147,117 +149,62 @@ description: Google 重叠实验基础设施论文的中文整理，介绍域、
 
 一个实验的有效规模定义为：
 
-![公式 1](/images/overlapping-experiment-infrastructure/image-04.png)
-一个实验的有效规模定义为：
+$$
+N = \left(
+  \frac{1}{\mathrm{queries}_{\mathrm{control}}} +
+  \frac{1}{\mathrm{queries}_{\mathrm{experiment}}}
+\right)^{-1}
+$$
 
-![公式 2](/images/overlapping-experiment-infrastructure/image-05.png)
-在工程实践中，我们主要关注
-
-![公式 3](/images/overlapping-experiment-infrastructure/image-06.png)
-
- ，但要通过  `N`个和才能影响相关的实验指标，为了正确确定  `N`值，我们需要知道：
+在工程实践中，我们主要关注各个单独项 $\mathrm{queries}_{\mathrm{control}}$ 和 $\mathrm{queries}_{\mathrm{experiment}}$，但它们是通过 $N$ 影响相关实验指标的估计方差。为了正确确定 $N$，我们需要知道：
 
 - 实验所关注的指标是什么。
-- 对每个指标，我们想检测实验改变的敏感度(θ)值是什么。比如，实验者想检测到2%的点击率变化。
-- 对每个指标，一个抽样单元N=1样本标准误差是（s），实验大小为 `N`的标准误差为 s/√N.
+- 对每个指标，我们想检测实验改变的敏感度（$\theta$）值是什么。比如，实验者想检测到 2% 的点击率变化。
+- 对每个指标，一个抽样单元（$N=1$）的样本标准误差是 $s$，实验大小为 $N$ 时的标准误差为 $s/\sqrt{N}$。
 
-*Kohavi* 假设实验与对照实验有相同的大小，比如
+*Kohavi* 假设实验组与对照组规模相同，即 $\mathrm{queries}_{\mathrm{experiment}}=2N$，那么必须满足：
 
-![公式 4](/images/overlapping-experiment-infrastructure/image-07.png)
+$$
+2N \geq 16\left(\frac{s}{\theta}\right)^2
+$$
 
- ，那么必须
+才能检测到预期的最小变化。常数 16 由期望置信水平 $1-\alpha$（通常为 95%）和期望统计功效 $1-\beta$（通常为 80%）共同决定。
 
-![公式 5](/images/overlapping-experiment-infrastructure/image-08.png)
+重叠实验的一个优点是：我们可以在每一层创建一个较大的对照实验，供多个实验共享。如果共享对照组远大于实验组，即：
 
- 大于等于
+$$
+\frac{1}{\mathrm{queries}_{\mathrm{control}}} +
+\frac{1}{\mathrm{queries}_{\mathrm{experiment}}}
+\approx
+\frac{1}{\mathrm{queries}_{\mathrm{experiment}}}
+$$
 
-![公式 6](/images/overlapping-experiment-infrastructure/image-09.png)
+那么可以使用 $\mathrm{queries}_{\mathrm{experiment}}=N$，而不是 $2N$。这样，实验组规模只需满足：
 
- 才能满足最小变化检测需求，16这个值是由置信度（
+$$
+\mathrm{queries}_{\mathrm{experiment}} = N
+\geq 10.5\left(\frac{s}{\theta}\right)^2
+$$
 
-![公式 7](/images/overlapping-experiment-infrastructure/image-10.png)
+同时统计功效 $1-\beta$ 可以提高到 90%。
 
- ，通常为95%）和期望的统计功效（
+在确定实验规模的过程中，更重要的问题是如何估计标准误差 $s$，尤其是对 $y/z$ 这类比率指标（比如覆盖率：有广告返回的查询量除以全部查询量）。当实验单元与分析单元不一致时，问题就会出现。以覆盖率为例，分析单元是查询，但对 `cookie` 取模实验而言，实验单元是一个 `cookie`（对应一系列查询），不能假设来自同一用户或 `cookie` 的请求相互独立。
 
-![公式 8](/images/overlapping-experiment-infrastructure/image-11.png)
+我们的方法是先计算每个实验单元的标准误差 $s'$，再用它推导 $s$。在这个例子中，$s'$ 是每个 `cookie mod` 的标准误差，并且：
 
- ，通常为80%）决定的。
+$$
+s = s'\sqrt{\text{avg queries per cookie\_mod}}
+$$
 
-我们这套重叠做法的一个优点是我们可以在每一层创建一个大的比照实验，这样它可以被多个实验共享，如果共享的对照实验规模比实验大的多（
+对于比率指标，我们使用 delta 方法计算 $s'$[11]。
 
-![公式 9](/images/overlapping-experiment-infrastructure/image-12.png)
-
- ），那么我们可以用
-
-![公式 10](/images/overlapping-experiment-infrastructure/image-13.png)
-
- 而不是
-
-![公式 11](/images/overlapping-experiment-infrastructure/image-14.png)
-
- ，这样虽然样本量变小为
-
-![公式 12](/images/overlapping-experiment-infrastructure/image-15.png)
-
- ，却有着90%的统计功效（
-
-![公式 13](/images/overlapping-experiment-infrastructure/image-16.png)
-
- ）。
-
-在确定实验规模的过程中，更重要的问题是如何估计标准误差
-
-![公式 14](/images/overlapping-experiment-infrastructure/image-17.png)
-
- ，特别是当我们使用很多比率指标
-
-![公式 15](/images/overlapping-experiment-infrastructure/image-18.png)
-
- 时（比如，覆盖率，有多少查询是返回广告的（有广告返回的查询/全部查询量））。问题产生于是实验的单元与分析的单元不一致时，比如，对于覆盖率，分析的单元是一个查询，但对于cookie取模的实验而言，实验的单元是一个cookie（一系列查询），并且我们无法假设来来自同一用户或cookie的请求之间是相互独立的，我们的方法是计算
-
-![公式 16](/images/overlapping-experiment-infrastructure/image-19.png)
-
- ，即每个实验的标准误差，然后以
-
-![公式 17](/images/overlapping-experiment-infrastructure/image-20.png)
-
- 来表示
-
-![公式 18](/images/overlapping-experiment-infrastructure/image-21.png)
-
- ，在上例中，
-
-![公式 19](/images/overlapping-experiment-infrastructure/image-22.png)
-
- 是每个cookie取模的标准误差，且
-
-![公式 20](/images/overlapping-experiment-infrastructure/image-23.png)
-
- 。对于比率指标，我们用delta方法计算
-
-![公式 21](/images/overlapping-experiment-infrastructure/image-24.png)
-
- [11]。
-
-图4是在不同实验中，包括cookie取模和随机流量实验，对于覆盖率指标与标准误差呈
-
-![公式 22](/images/overlapping-experiment-infrastructure/image-25.png)
-
- 的关系，图中的斜线即是
-
-![公式 23](/images/overlapping-experiment-infrastructure/image-26.png)
-
- ，坐标轴上的值出于保密的原因隐去了，但可以看出cookie取模的斜线比查询的斜线陡峭，比如在相同的准确度下衡量相同的覆盖率的变化，一个cookie取模的实验需要比随机流量实验大的规模。
+图 4 展示了不同实验分流类型（包括 `cookie mod` 和随机流量实验）下，覆盖率指标的标准误差与 $1/\sqrt{N}$ 的关系。直线的斜率就是 $s$。坐标轴上的值出于保密原因被隐去，但可以看出 `cookie mod` 对应的直线比随机查询的直线更陡：要以相同精度衡量相同的覆盖率变化，`cookie` 取模实验需要比随机流量实验更大的样本规模。
 
 ![图 4：不同分配类型下覆盖率与标准误差的关系](/images/overlapping-experiment-infrastructure/image-27.png)
 
-图4：在分配类型下计算覆盖度  s  的斜线
+<p class="figure-caption">图 4：不同分流类型下，覆盖率标准误差与 1/√N 的关系</p>
 
-因为不同的指标和不同的分配有着不同的
-
-![公式 24](/images/overlapping-experiment-infrastructure/image-28.png)
-
-，那么我不应该让每个实验者自己去计算它， 我们提供了一个工具计算实验者指定的关注指标和指标敏感度，分配类型（比如`cookie`取模或是随机流量）和他们想要的某种流量（比如，分配条件，比如日语流量），工具就告诉实验者他需要多大规模流量才可以支持他的要求的实验。实验者可以轻松地在流量大小和敏感量之间权衡，有了这个工具，我们可以认为实验者在运行实验之前会设置合理的实验规模。
+由于 $s$ 会随指标和分流类型而变化，我们不应让每位实验者自行计算它。我们提供了一个工具：实验者指定关注指标及其敏感度、分配类型（比如 `cookie` 取模或随机流量）和目标流量（比如日语流量等分配条件），工具就会给出支持该实验所需的流量规模。实验者可以轻松地在流量大小和敏感度之间权衡，从而在运行实验前设置合理的实验规模。
 
 为了为我们的实验规模工具收集数据，我们一直运行一组 同质测试（`uniformity trial`），比如，我们运行许多 对比实验或A vs. A实验。这些实验有着不同的实验规模和分配类型，我们可以用这些结果经验地衡量我们指标的自然变化（`natural variance`），并可以测试我们计算的置信区间的正确性。
 
@@ -265,13 +212,7 @@ description: Google 重叠实验基础设施论文的中文整理，介绍域、
 
 回顾一下，流量分配是指分配给实验的流量，但是一个实验可能不会对所有分配给它的流量进行新特性服务，相反，一些实验可能仅在某种请求时被 触发器（`trigger`），比如一个实验是测试何时应该显示天气信息，它可能会得到全部的流量 ，但只有一部分流量的查询会触发显示天气，这一部分但触发查询就称为触发集合。
 
-通常，我们无法仅将触发集合的流量给实验，因为要确定请求是否触发，是需要运行时计算的，这种运行时的计算正是触发无法实现成分配条件的原因（这个触发条件很难构造对照实验流量），所以，重要的工作是记录事实（`factual`，当实验被触发）和反事实（`counter-factual`，当实验可被触发），反事实是在对比实验中记录的，比如在前面的例子中，事实（当天气信息展示）是记录在实验中的，反事实是记录在对照实验中的。比如当这个查询是可以展示天气信息的（因为它是在对比实验中，所以实际并没展示）。这些日志对于实验样本量和分析实验都很重要，因为流量中包括了没有实验变化的请求，这些请求会稀释实验的作用，在触发集合上衡量实验结果会更准确衡量实验的影响。另外，通过关注于触发集合的显著效果，实验流量的需求可以减少，因为实验的有效规模是依赖于我们要想检测的敏感度的倒数
-
-（
-
-![公式 25](/images/overlapping-experiment-infrastructure/image-29.png)
-
-）。
+通常，我们无法仅将触发集合的流量分配给实验，因为确定请求是否触发需要运行时计算，这正是触发条件难以直接实现为分配条件的原因（也很难据此构造对照实验流量）。所以，重要的工作是记录事实（`factual`，实验被触发）和反事实（`counter-factual`，实验本可以被触发）。反事实记录在对照实验中：比如在前面的例子里，实验组记录实际展示天气信息的查询；对照组记录本可展示天气信息、但由于处于对照组而没有展示的查询。这些日志对于实验样本量和实验分析都很重要，因为没有受到实验影响的请求会稀释实验效果，而在触发集合上衡量结果能更准确地反映实验影响。此外，聚焦于触发集合中更大的效应还可以减少所需流量，因为实验的有效规模取决于希望检测的效应平方的倒数（$1/\theta^2$）。
 
 #### 5.2.3 前期与后期
 
@@ -327,15 +268,13 @@ description: Google 重叠实验基础设施论文的中文整理，介绍域、
 
 我们可以用几个标准来判断我们是否成功地运行更多的实验，在一个时期上一共运行了多少实验，这些实验中有多少发布了，有多少不同的实验在运行实验（见图5）。要说明的是实验的数目包含了对照实验的数目。对于运行实验人数，一些实验是有多个拥有者的（比如，如果某人离开城市或发生了事），或是将团队邮件列表中的成员也认为拥有者。不幸的是，我们无法轻松地知道有多少拥有者是非工程师，但有意思的是，非工程师的数据是在增加的，对分布层的数量，我们只计算了使用重叠实验的发布层的数量。在重叠实验之前，我们用其他的一些机制发布实验，但它们的频率在下降。在所有的图中，`Y`轴上的数据出于保密的原因隐去了（它们是线性比例），但从趋势上可以明显地看出，我们系统支持了指数级增加的实验，发布，实验者。
 
-。
-
 ![图 5：实验、拥有者与发布数量趋势（1/3）](/images/overlapping-experiment-infrastructure/image-30.png)
 
 ![图 5：实验、拥有者与发布数量趋势（2/3）](/images/overlapping-experiment-infrastructure/image-31.png)
 
 ![图 5：实验、拥有者与发布数量趋势（3/3）](/images/overlapping-experiment-infrastructure/image-32.png)
 
-图5：实验，拥有者，发布数量在时间上的趋势图
+<p class="figure-caption">图 5：实验、拥有者和发布数量随时间变化的趋势</p>
 
 ### 6.2 更好
 

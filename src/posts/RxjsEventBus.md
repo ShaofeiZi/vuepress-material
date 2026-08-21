@@ -14,7 +14,7 @@ tags: [rxjs, EventBus]
 ## EventBus
 EventBus是一个事件发布/订阅框架，通过解耦发布者和订阅者简化事件传递。特别是在多层控制器嵌套的情况下。
 
-EventBus最大的特点就是：简洁、解耦。在没有EventBus之前我们通常用广播来实现监听，或者自定义接口函数回调，比如ng1的$broadcast和$emit、VUE的$emit,和$on等。
+EventBus最大的特点就是：简洁、解耦。在没有EventBus之前我们通常用广播来实现监听，或者自定义接口函数回调，比如ng1的`$broadcast`和`$emit`、VUE的`$emit`和`$on`等。
 
 ![](/images/RxjsEventBus1.png)
 

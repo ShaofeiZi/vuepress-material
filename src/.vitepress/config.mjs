@@ -13,6 +13,43 @@ export default defineConfig({
   cleanUrls: false,
   useWebFonts: false,
   srcExclude: ['README.md'],
+  markdown: {
+    math: {
+      tex: {
+        formatError(_jax, error) {
+          throw new Error(`Invalid math expression: ${error?.message || String(error)}`)
+        }
+      }
+    }
+  },
+  transformHead({ pageData }) {
+    const cover = String(pageData.frontmatter?.cover || '').trim()
+    if (!cover) return []
+
+    const socialImage = String(pageData.frontmatter?.socialImage || '').trim() || cover
+    const image = `https://shaofeizi.github.io${withBase(socialImage)}`
+    const pagePath = String(pageData.relativePath || '').replace(/\.md$/i, '.html')
+    const url = `https://shaofeizi.github.io${withBase(pagePath)}`
+    const title = String(pageData.title || '')
+    const description = String(pageData.description || '')
+    const imageAlt = String(pageData.frontmatter.coverAlt || title)
+    return [
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: description }],
+      ['meta', { property: 'og:type', content: 'article' }],
+      ['meta', { property: 'og:url', content: url }],
+      ['meta', { property: 'og:image', content: image }],
+      ['meta', { property: 'og:image:alt', content: imageAlt }],
+      ['meta', { property: 'og:image:type', content: 'image/png' }],
+      ['meta', { property: 'og:image:width', content: '1200' }],
+      ['meta', { property: 'og:image:height', content: '630' }],
+      ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+      ['meta', { name: 'twitter:title', content: title }],
+      ['meta', { name: 'twitter:description', content: description }],
+      ['meta', { name: 'twitter:image', content: image }],
+      ['meta', { name: 'twitter:image:alt', content: imageAlt }]
+    ]
+  },
   head: [
     ['link', { rel: 'shortcut icon', href: withBase('favicon.ico') }],
     ['link', { rel: 'manifest', href: withBase('manifest.json') }],
