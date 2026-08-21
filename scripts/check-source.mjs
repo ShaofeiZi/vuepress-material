@@ -12,7 +12,8 @@ const SOURCE_DIR = path.join(PROJECT_ROOT, 'src')
 const POSTS_DIR = path.join(SOURCE_DIR, 'posts')
 const PUBLIC_DIR = path.join(SOURCE_DIR, 'public')
 const SITE_BASE = '/BLOG/'
-const MIGRATION_POST_COUNT = 54
+const EXPECTED_POST_COUNT = 55
+const EXPECTED_TAG_COUNT = 49
 const errors = []
 const tags = new Set()
 const routeKeys = new Map()
@@ -209,7 +210,7 @@ async function main () {
   check(!JSON.stringify(config.head).includes('safari-pinned-tab.svg'), 'Head must not reference the missing safari-pinned-tab.svg')
 
   const postFiles = (await readdir(POSTS_DIR)).filter(file => file.endsWith('.md')).sort()
-  check(postFiles.length === MIGRATION_POST_COUNT, `Migration snapshot must retain ${MIGRATION_POST_COUNT} posts; found ${postFiles.length}`)
+  check(postFiles.length === EXPECTED_POST_COUNT, `Expected ${EXPECTED_POST_COUNT} posts; found ${postFiles.length}`)
   for (const fileName of postFiles) {
     const source = await readFile(path.join(POSTS_DIR, fileName), 'utf8')
     parsePostFrontmatter(source, fileName)
@@ -233,7 +234,7 @@ async function main () {
   check(frontmatterLayout(tagsIndex) === 'tags', 'src/tags/index.md must use layout: tags')
   check(pageTemplate.includes('<!-- @content -->'), 'pagination template must inject generated frontmatter with @content')
   await requireNonEmptyFile('src/page/[page].paths.js')
-  check(tags.size === 45, `Expected 45 distinct tags for the migration snapshot; found ${tags.size}`)
+  check(tags.size === EXPECTED_TAG_COUNT, `Expected ${EXPECTED_TAG_COUNT} distinct tags; found ${tags.size}`)
   const encodedTags = [...tags].map(tag => encodeURIComponent(tag))
   check(new Set(encodedTags).size === tags.size, 'Two tags map to the same encoded query value')
 
