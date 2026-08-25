@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">时空可组合性的一种编程范式</title>
+  <desc id="desc">组件在时间轴上可加载和撤回，并在空间依赖图中反应式组合。</desc>
+  <rect width="1200" height="630" fill="#f4f1e9"/>
+  <rect width="1200" height="12" fill="#25283d"/>
+  <g stroke="#d1d1d4" stroke-width="1" opacity="0.7">
+    <path d="M54 86H1146M54 544H1146"/>
+    <path d="M54 86V544M1146 86V544" stroke-dasharray="4 8"/>
+  </g>
+  <g font-family="Roboto,Arial,sans-serif">
+    <text x="66" y="68" fill="#626676" font-size="14" font-weight="500" letter-spacing="3">CORDIS · PROGRAMMING PARADIGM</text>
+    <text x="66" y="166" fill="#25283d" font-size="76" font-weight="700" letter-spacing="-2">SPACE</text>
+    <text x="66" y="258" fill="#3f51b5" font-size="76" font-weight="700" letter-spacing="-2">× TIME</text>
+    <text x="66" y="324" fill="#525665" font-size="24" font-weight="500" letter-spacing="5">COMPOSABILITY</text>
+    <text x="66" y="468" fill="#727685" font-size="14" letter-spacing="1.6">REVERTIBLE EFFECTS</text>
+    <text x="66" y="502" fill="#727685" font-size="14" letter-spacing="1.6">REACTIVE COEFFECTS</text>
+    <text x="66" y="530" fill="#9a6a16" font-size="12" font-family="Consolas,Monaco,monospace">Γ → ∂Γ → Context</text>
+  </g>
+  <g transform="translate(520 72)">
+    <text x="0" y="20" fill="#3f51b5" font-size="13" font-family="Roboto,Arial,sans-serif" font-weight="700" letter-spacing="2">SPATIAL DEPENDENCY</text>
+    <rect x="0" y="42" width="608" height="234" rx="5" fill="#fffdfa" stroke="#3f51b5" stroke-width="2" stroke-dasharray="8 8"/>
+    <g font-family="Roboto,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="middle">
+      <rect x="36" y="116" width="116" height="68" rx="4" fill="#e8eaf6" stroke="#3f51b5" stroke-width="2"/><text x="94" y="156" fill="#303f9f">COMPONENT A</text>
+      <rect x="246" y="76" width="116" height="68" rx="4" fill="#e6f1ef" stroke="#38766f" stroke-width="2"/><text x="304" y="116" fill="#285b56">COMPONENT B</text>
+      <rect x="246" y="174" width="116" height="68" rx="4" fill="#fff1d2" stroke="#bd7d0d" stroke-width="2"/><text x="304" y="214" fill="#865807">COMPONENT C</text>
+      <rect x="454" y="116" width="116" height="68" rx="4" fill="#f7e4eb" stroke="#c2185b" stroke-width="2"/><text x="512" y="156" fill="#9b1248">COMPONENT D</text>
+    </g>
+    <g fill="none" stroke-width="4" stroke-linecap="square">
+      <path d="M152 150H214V110H246" stroke="#3f51b5"/><path d="M152 150H214V208H246" stroke="#4f8f8a" stroke-dasharray="9 7"/><path d="M362 110H408V150H454" stroke="#c2185b"/><path d="M362 208H408V150H454" stroke="#e9b44c" stroke-dasharray="9 7"/>
+    </g>
+    <g fill="#fffdfa" stroke-width="3"><circle cx="214" cy="110" r="7" stroke="#3f51b5"/><circle cx="214" cy="208" r="7" stroke="#4f8f8a"/><circle cx="408" cy="150" r="7" stroke="#c2185b"/></g>
+    <text x="0" y="320" fill="#c2185b" font-size="13" font-family="Roboto,Arial,sans-serif" font-weight="700" letter-spacing="2">TEMPORAL RECOVERY</text>
+    <line x1="0" y1="350" x2="608" y2="350" stroke="#b8bbc8" stroke-width="2"/>
+    <g font-family="Roboto,Arial,sans-serif" font-size="12" text-anchor="middle">
+      <circle cx="38" cy="350" r="10" fill="#25283d"/><text x="38" y="384" fill="#626676">LOAD</text>
+      <circle cx="200" cy="350" r="10" fill="#3f51b5"/><text x="200" y="384" fill="#626676">EFFECT</text>
+      <circle cx="362" cy="350" r="10" fill="#4f8f8a"/><text x="362" y="384" fill="#626676">TRACK</text>
+      <circle cx="570" cy="350" r="10" fill="#c2185b"/><text x="570" y="384" fill="#626676">RECOVER</text>
+    </g>
+    <path d="M570 420H38V394" fill="none" stroke="#c2185b" stroke-width="4"/><path d="M38 394l-8 14h16z" fill="#c2185b"/>
+    <text x="304" y="446" fill="#9b1248" font-size="13" font-family="Consolas,Monaco,monospace" text-anchor="middle">recover(track(effect, inverse)) = identity</text>
+  </g>
+</svg>

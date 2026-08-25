@@ -13,8 +13,8 @@ const SOURCE_DIR = path.join(PROJECT_ROOT, 'src')
 const POSTS_DIR = path.join(SOURCE_DIR, 'posts')
 const PUBLIC_DIR = path.join(SOURCE_DIR, 'public')
 const SITE_BASE = '/BLOG/'
-const EXPECTED_POST_COUNT = 55
-const EXPECTED_TAG_COUNT = 49
+const EXPECTED_POST_COUNT = 56
+const EXPECTED_TAG_COUNT = 53
 const errors = []
 const tags = new Set()
 const routeKeys = new Map()
@@ -247,7 +247,7 @@ async function main () {
   }
 
   const totalPages = Math.ceil(postFiles.length / pageSize)
-  check(totalPages === 11, `Expected 11 pagination pages for the migration snapshot; found ${totalPages}`)
+  check(totalPages === 12, `Expected 12 pagination pages for the current snapshot; found ${totalPages}`)
   const pageTemplate = await readFile(path.join(SOURCE_DIR, 'page', '[page].md'), 'utf8')
   const tagsIndex = await readFile(path.join(SOURCE_DIR, 'tags', 'index.md'), 'utf8')
   check(frontmatterLayout(pageTemplate) === 'home', 'src/page/[page].md must use layout: home')

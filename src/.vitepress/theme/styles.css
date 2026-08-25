@@ -117,11 +117,13 @@ input:focus-visible {
 }
 
 .site-main {
+  min-width: 0;
   min-height: calc(100vh - var(--blog-header) - 121px);
   flex: 1 0 auto;
 }
 
 .content-container {
+  min-width: 0;
   width: min(100%, calc(var(--blog-content) + 48px));
   margin: 0 auto;
   padding: 24px;
@@ -918,6 +920,7 @@ input:focus-visible {
 }
 
 .article-card {
+  min-width: 0;
   padding: 32px 36px 36px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.13), 0 2px 7px rgba(0, 0, 0, 0.12);
 }
@@ -979,6 +982,8 @@ input:focus-visible {
 }
 
 .article-content {
+  min-width: 0;
+  max-width: 100%;
   min-height: 150px;
   color: var(--blog-text);
   font-size: 16px;

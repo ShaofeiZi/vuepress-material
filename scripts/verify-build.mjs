@@ -415,8 +415,66 @@ async function verifyRenderedSemantics () {
   if (!indexHtml.includes('/BLOG/images/overlapping-experiment-infrastructure/cover.svg')) {
     fail('Home page is missing the featured article cover.', 'home-featured-cover')
   }
+
+  const translatedPaper = await readFile(path.join(OUTPUT_DIR, 'posts', 'spatiotemporal-composability.html'), 'utf8')
+  for (const expected of [
+    '<mjx-container',
+    '<mjx-assistive-mml',
+    '/BLOG/images/spatiotemporal-composability/figure-1-lifecycle.png',
+    '/BLOG/images/spatiotemporal-composability/figure-2-lifecycle-transitions.png',
+    'https://github.com/cordiverse/paper',
+    '13f28585668a28106b2f53bedada36e45bc1ed3e',
+    '非官方中文翻译',
+    '[124]'
+  ]) {
+    if (!translatedPaper.includes(expected)) {
+      fail('Translated paper is missing ' + JSON.stringify(expected) + '.', 'translated-paper:' + expected)
+    }
+  }
+  const translatedMathContainers = (translatedPaper.match(/<mjx-container/g) || []).length
+  const translatedDisplayMath = (translatedPaper.match(/<mjx-container tabindex="0"/g) || []).length
+  const translatedAssistiveMath = (translatedPaper.match(/<mjx-assistive-mml/g) || []).length
+  if (translatedMathContainers !== 2057 || translatedDisplayMath !== 106 || translatedAssistiveMath !== 2057) {
+    fail(
+      `Translated paper rendered ${translatedMathContainers} equations (${translatedDisplayMath} display, ${translatedAssistiveMath} assistive) instead of 2057 (106 display, 2057 assistive).`,
+      'translated-paper-math-count'
+    )
+  }
+  if (/<merror\b|data-mjx-error|mathcolor="red"/.test(translatedPaper)) {
+    fail('Translated paper contains a MathJax rendering error.', 'translated-paper-math-error')
+  }
+  if (/\[\^[1-6]\]/.test(translatedPaper)) {
+    fail('Translated paper contains an unrendered footnote marker.', 'translated-paper-footnote')
+  }
+  for (let note = 1; note <= 6; note += 1) {
+    const noteId = `note-${note}`
+    const referencePattern = new RegExp('<sup id="note-ref-' + note + '-\\d+"><a href="#' + noteId + '"', 'g')
+    const references = [...translatedPaper.matchAll(referencePattern)].map(match => match[0])
+    if (references.length === 0 || !translatedPaper.includes(`id="${noteId}"`)) {
+      fail(`Translated paper footnote ${note} is missing a reference or note target.`, `translated-paper-note:${note}`)
+      continue
+    }
+    for (const reference of references) {
+      const referenceId = reference.match(/id="([^"]+)"/)?.[1]
+      if (referenceId && !translatedPaper.includes(`href="#${referenceId}"`)) {
+        fail(`Translated paper footnote ${note} is missing return link ${referenceId}.`, `translated-paper-note-return:${referenceId}`)
+      }
+    }
+  }
+  const translatedPaperSocialImage = 'https://shaofeizi.github.io/BLOG/images/spatiotemporal-composability/cover.png'
+  if (findMetaContent(translatedPaper, 'og:image') !== translatedPaperSocialImage) {
+    fail('Translated paper has the wrong social image.', 'translated-paper-social-image')
+  }
+  if (!indexHtml.includes('/BLOG/images/spatiotemporal-composability/cover.svg')) {
+    fail('Home page is missing the translated paper cover.', 'translated-paper-home-cover')
+  }
+
+  const mathPostNames = new Set([
+    'overlapping-experiment-infrastructure.html',
+    'spatiotemporal-composability.html'
+  ])
   const postOutputs = (await readdir(path.join(OUTPUT_DIR, 'posts'))).filter(file => file.endsWith('.html'))
-  for (const fileName of postOutputs.filter(file => file !== 'overlapping-experiment-infrastructure.html')) {
+  for (const fileName of postOutputs.filter(file => !mathPostNames.has(file))) {
     const legacyHtml = await readFile(path.join(OUTPUT_DIR, 'posts', fileName), 'utf8')
     if (legacyHtml.includes('<mjx-container')) {
       fail(`Non-math article ${fileName} contains accidental MathJax output.`, `legacy-math:${fileName}`)
